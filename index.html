@@ -41,13 +41,13 @@
 
     <div id="level-0" class="game-level active-level">
         <img src="first-photo.jpg" style="width: 250px; border: 8px solid #FFFD74; border-radius: 20px; margin-bottom: 20px;" onerror="this.src='https://via.placeholder.com/250/000033/FFFD74?text=Upload+first-photo.jpg'">
-        <h2>hiii my sweetie pieee 💕</h2>
+        <h2>hiii my sweetest bubbooo 💕🐰🧸</h2>
         <p style="font-size: 1.2rem;">i'm not gonna make this easy for you. complete the challenges and maybe just maybe i'll let you be my valentine</p>
         <button class="luxe-button" onclick="nextLevel(1)">challenge accepted</button>
     </div>
 
     <div id="level-1" class="game-level">
-        <h2>hungry hungry hippo 🦛 (a very nom quest) 🍵</h2>
+        <h2>hungry hungry hippos 🦛 (a very nom quest) 🍵</h2>
         <p>help us find our way to our seafood soup spot!</p>
         <div id="map"></div>
     </div>
@@ -116,7 +116,7 @@
             const marker = L.marker(sujata, { icon: usIcon, draggable: true }).addTo(map);
             marker.on('dragend', function() {
                 if (marker.getLatLng().distanceTo(L.latLng(soup)) < 400) {
-                    alert("Level 1 Clear! 🍓");
+                    alert("we made itt yummy yummy soup!! 🍓");
                     nextLevel(2);
                 }
             });
@@ -141,7 +141,7 @@
                         if (i === 19) { // d6 move
                             sq.innerText = '♝';
                             document.querySelectorAll('.square').forEach(s => { if(s.innerText === '♝' && s !== sq) s.innerText = ''; });
-                            setTimeout(() => { alert("Checkmate! 🍓"); nextLevel(3); }, 300);
+                            setTimeout(() => { alert("look at u checkmating me 🤭 should've known my guy never misses"); nextLevel(3); }, 300);
                         } else { window.bishopSelected = false; }
                     } else if (sq.innerText === '♝') {
                         window.bishopSelected = true;
@@ -160,9 +160,9 @@
             plate.addEventListener('drop', (e) => {
                 const id = e.dataTransfer.getData('text');
                 if (id === 'tiramisu' || id === 'mango') {
-                    alert("Correct! 😉🍰");
+                    alert("YUP. gold star⭐️ im smiling like an idiot now");
                     nextLevel(4);
-                } else { alert("Try again! 🙅‍♀️"); }
+                } else { alert("be so serious absolutely not"); }
             });
         }
     </script>
