@@ -103,30 +103,54 @@
         }
 
         function createChess() {
-            const board = document.getElementById('chess-board');
-            board.innerHTML = '';
-            const pieces = { 7: '♚', 15: '♟', 14: '♟', 56: '🏰' };
+    const board = document.getElementById('chess-board');
+    board.innerHTML = '';
+    
+    // THE DISCOVERED MATE SETUP:
+    // He moves the Bishop at b1 to reveal the Rook's check on the King at h1!
+    const pieces = {
+        7: '♔',   // White King at h8 (mapped for ease to top right)
+        15: '♟',  // White Pawn h7
+        56: '♝',  // BLACK BISHOP at a1 (The piece he moves)
+        60: '♜',  // BLACK ROOK at e1 (Already pointing at the King!)
+    };
 
-            for (let i = 0; i < 64; i++) {
-                const row = Math.floor(i / 8);
-                const sq = document.createElement('div');
-                sq.className = 'square ' + ((row + (i % 8)) % 2 === 0 ? 'white-sq' : 'black-sq');
-                if (pieces[i]) sq.innerText = pieces[i];
+    for (let i = 0; i < 64; i++) {
+        const row = Math.floor(i / 8);
+        const col = i % 8;
+        const sq = document.createElement('div');
+        sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
+        
+        if (pieces[i]) {
+            sq.innerText = pieces[i];
+            // The Bishop is his "Active" piece
+            if (i === 56) sq.style.cursor = 'pointer';
+        }
 
-                sq.onclick = () => {
-                    if (window.rookSelected) {
-                        if (Math.floor(i / 8) === 0) { 
-                            sq.innerText = '🏰';
-                            document.querySelectorAll('.square').forEach(s => { if(s.innerText === '🏰' && s !== sq) s.innerText = ''; });
-                            setTimeout(() => { alert("Checkmate! Magnus would be proud. 😉"); nextLevel(3); }, 300);
-                        }
-                    } else if (sq.innerText === '🏰') {
-                        window.rookSelected = true;
-                        sq.style.backgroundColor = 'rgba(255, 181, 167, 0.5)';
-                    }
-                };
-                board.appendChild(sq);
+        sq.onclick = () => {
+            if (window.pieceSelected) {
+                // THE WINNING MOVE: Move Bishop anywhere away from the Rook's line
+                // But let's make him move it to the "b2" diagonal area (i === 49)
+                if (i !== 56 && i !== 60) {
+                    sq.innerText = '♝';
+                    // Clear the old Bishop
+                    document.querySelectorAll('.square').forEach(s => {
+                        if(s.innerText === '♝' && s !== sq) s.innerText = '';
+                    });
+                    
+                    setTimeout(() => {
+                        alert("Discovered Checkmate! Magnus would be terrified. 😉🍓");
+                        nextLevel(3);
+                    }, 300);
+                }
+            } else if (sq.innerText === '♝') {
+                window.pieceSelected = true;
+                sq.style.backgroundColor = 'rgba(255, 181, 167, 0.5)';
             }
+        };
+        board.appendChild(sq);
+    }
+}
         }
     </script>
 </body>
