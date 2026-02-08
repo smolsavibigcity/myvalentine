@@ -49,13 +49,16 @@ function nextLevel(lvl) {
 }
 
 function startChess() {
+    console.log("Chess Level Started - Setting up pieces...");
     var board = Chessboard('board', {
         draggable: true,
+        dropOffBoard: 'snapback',
+        // THIS LINE DOWNLOADS THE PIECES FROM THE WEB
         pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
-        // NEW POSITION: The Rook starts at e1 (bottom) instead of e8 (top)
+        // Start: Rook at e1, King at e8. He must move Rook to e8!
         position: '4k1/5ppp/8/8/8/8/8/4R1K1', 
         onDrop: function(source, target) {
-            // Success: Moving the Rook (R) to the 8th rank (the top row)
+            // Winning move: Rook moves to the 8th rank
             if (target.includes('8')) {
                 alert("Checkmate! Data Validation Successful. 🍓");
                 nextLevel(3);
