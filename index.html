@@ -13,13 +13,11 @@
         .game-level { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
         h2 { font-family: 'Gaegu', cursive; color: var(--matcha); font-size: 2.5rem; }
         #map { width: 350px; height: 400px; border: 10px solid white; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        
-        /* CUTE CUSTOM CHESSBOARD */
-        .chess-container { width: 320px; height: 320px; display: grid; grid-template-columns: repeat(8, 1fr); border: 10px solid white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px auto; }
+        .chess-container { width: 320px; height: 320px; display: grid; grid-template-columns: repeat(8, 1fr); border: 10px solid white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px auto; background: white; }
         .square { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 30px; }
-        .white-sq { background-color: #f0d9b5; }
-        .black-sq { background-color: #b58863; }
-        .rook { cursor: grab; user-select: none; }
+        .white-sq { background-color: #fdfaf6; }
+        .black-sq { background-color: #9fb8ad; opacity: 0.6; }
+        .rook { cursor: pointer; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
     </style>
 </head>
 <body>
@@ -38,29 +36,29 @@
 
     <div id="level-3" class="game-level hidden">
         <h2>Level 3: The Verdict ⚖️</h2>
-        <img src="first-photo.jpg" style="width: 250px; border: 10px solid white; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/250?text=Upload+Photo'">
+        <img src="us.jpg" style="width: 280px; border: 10px solid white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);" onerror="this.src='https://via.placeholder.com/280x200?text=Upload+us.jpg+to+GitHub'">
         <h2 style="color: var(--strawberry);">Will you be my Valentine?</h2>
-        <button onclick="alert('Yay! ❤️')" style="background: var(--matcha); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer;">Yes!</button>
+        <button onclick="alert('Yay! ❤️ Reservation confirmed at 8:00 PM!')" style="background: var(--strawberry); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Gaegu', cursive; font-size: 1.5rem; cursor: pointer;">Yes, Motion Granted!</button>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // --- LEVEL 1: MAP ---
         const sujata = [18.54014, 73.88345];
         const soup = [18.53755, 73.87965];
         let map = L.map('map').setView(sujata, 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
+        // MAP MARKER LOGIC
         const usIcon = L.divIcon({
             className: 'custom-marker',
-            html: '<img src="us.jpg" style="width:50px;height:50px;border-radius:50%;border:3px solid white;" onerror="this.src=\'https://via.placeholder.com/50/ffb5a7/ffffff?text=US\'">',
-            iconSize: [50, 50]
+            html: '<img src="us.jpg" style="width:60px;height:60px;border-radius:50%;border:4px solid white;object-fit:cover;" onerror="this.src=\'https://via.placeholder.com/60/ffb5a7/ffffff?text=US\'">',
+            iconSize: [60, 60]
         });
 
         const marker = L.marker(sujata, { icon: usIcon, draggable: true }).addTo(map);
         marker.on('dragend', function() {
             if (marker.getLatLng().distanceTo(L.latLng(soup)) < 400) {
-                alert("Level 1 Clear! 🍓");
+                alert("Level 1 Clear! 🍓 Ready for Level 2?");
                 nextLevel(2);
             }
         });
@@ -71,7 +69,6 @@
             if (lvl === 2) createChess();
         }
 
-        // --- LEVEL 2: CUSTOM CHESS (FAIL-PROOF) ---
         function createChess() {
             const board = document.getElementById('chess-board');
             board.innerHTML = '';
@@ -81,19 +78,28 @@
                 const sq = document.createElement('div');
                 sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
                 
-                // Place King and Rook
-                if (i === 4) sq.innerText = '♚'; // Black King
+                if (i === 4) sq.innerText = '♚'; // King
                 if (i === 60) {
-                    sq.innerText = '🏰'; // White Rook
+                    sq.innerText = '🏰'; // Rook
                     sq.className += ' rook';
-                    sq.onclick = () => { sq.innerText = ''; window.rookSelected = true; };
+                    sq.onclick = () => { 
+                        sq.innerText = ''; 
+                        window.rookSelected = true; 
+                        sq.style.backgroundColor = '#ffb5a7'; // Highlight start
+                    };
                 }
                 
-                sq.onmousedown = () => {
-                    if (window.rookSelected && row === 0) {
-                        sq.innerText = '🏰';
-                        alert("Checkmate! 🍵 Proceeding to the verdict.");
-                        nextLevel(3);
+                sq.onclick = () => {
+                    if (window.rookSelected) {
+                        if (row === 0) {
+                            sq.innerText = '🏰';
+                            setTimeout(() => {
+                                alert("Checkmate! 🍵 Motion for Valentine's Date is now in session.");
+                                nextLevel(3);
+                            }, 300);
+                        } else if (i !== 60) {
+                            alert("Try moving it to the top row to trap the King!");
+                        }
                     }
                 };
                 board.appendChild(sq);
