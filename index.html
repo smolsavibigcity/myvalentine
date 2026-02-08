@@ -76,23 +76,34 @@
         const soup = [18.53755, 73.87965];
         let map;
 
-        window.onload = function() {
-            map = L.map('map').setView(sujata, 16);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+       // --- THE MAP FIX ---
+window.onload = function() {
+    // 1. Create the map
+    map = L.map('map').setView(sujata, 16);
 
-            const usIcon = L.divIcon({
-                className: 'custom-marker',
-                html: '<img src="us.jpg" style="width:80px;height:80px;border-radius:50%;border:5px solid white;object-fit:cover;" onerror="this.src=\'https://via.placeholder.com/80/ffb5a7/ffffff?text=US\'">',
-                iconSize: [80, 80]
-            });
+    // 2. Use the FREE provider (No API key / 401 error possible)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
 
-            const marker = L.marker(sujata, { icon: usIcon, draggable: true }).addTo(map);
-            marker.on('dragend', function() {
-                if (marker.getLatLng().distanceTo(L.latLng(soup)) < 400) {
-                    alert("Level 1 Clear! 🍓");
-                    nextLevel(2);
-                }
-            });
+    // 3. Setup the marker
+    const usIcon = L.divIcon({
+        className: 'custom-marker',
+        html: '<img src="us.jpg" style="width:80px;height:80px;border-radius:50%;border:5px solid white;object-fit:cover;" onerror="this.src=\'https://via.placeholder.com/80/ffb5a7/ffffff?text=US\'">',
+        iconSize: [80, 80]
+    });
+
+    const marker = L.marker(sujata, { icon: usIcon, draggable: true }).addTo(map);
+    marker.on('dragend', function() {
+        if (marker.getLatLng().distanceTo(L.latLng(soup)) < 400) {
+            alert("Level 1 Clear! 🍓");
+            nextLevel(2);
+        }
+    });
+
+    // 4. THE MAGIC COMMAND: This forces the map to draw itself
+    setTimeout(() => { map.invalidateSize(); }, 1000);
+};
             setTimeout(() => { map.invalidateSize(); }, 800);
         };
 
