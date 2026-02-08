@@ -12,45 +12,23 @@
         .hidden { display: none !important; }
         .game-level { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
         h2 { font-family: 'Gaegu', cursive; color: var(--matcha); font-size: 3rem; margin: 10px 0; }
-        
-        /* RESPONSIVE MAP: Bigger on laptops, fits on phones */
-        #map { 
-            width: 90vw; 
-            max-width: 800px; 
-            height: 60vh; 
-            max-height: 500px;
-            border: 12px solid white; 
-            border-radius: 40px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1); 
-            background: #eee; 
-        }
-
-        /* RESPONSIVE CHESSBOARD */
-        .chess-container { 
-            width: 90vw; 
-            max-width: 450px; 
-            aspect-ratio: 1 / 1;
-            display: grid; 
-            grid-template-columns: repeat(8, 1fr); 
-            border: 12px solid white; 
-            border-radius: 15px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1); 
-            margin: 20px auto; 
-            background: white; 
-        }
-        
-        .square { display: flex; align-items: center; justify-content: center; font-size: 6vw; cursor: pointer; }
-        @media (min-width: 600px) { .square { font-size: 40px; } }
-        
+        #map { width: 90vw; max-width: 600px; height: 400px; border: 12px solid white; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: #eee; }
+        .chess-container { width: 320px; height: 320px; display: grid; grid-template-columns: repeat(8, 1fr); border: 10px solid white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px auto; background: white; }
+        .square { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; }
         .white-sq { background-color: #fdfaf6; }
         .black-sq { background-color: #9fb8ad; opacity: 0.6; }
-        .luxe-button { background: var(--strawberry); color: white; border: none; padding: 20px 50px; border-radius: 60px; font-family: 'Gaegu', cursive; font-size: 2rem; cursor: pointer; transition: 0.3s; }
-        .luxe-button:hover { transform: scale(1.05); }
+        .luxe-button { background: var(--strawberry); color: white; border: none; padding: 20px 50px; border-radius: 60px; font-family: 'Gaegu', cursive; font-size: 2rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="level-1" class="game-level">
+    <div id="level-0" class="game-level">
+        <h2>A Very Nom Quest 🍓</h2>
+        <p>Ready to solve the case of the Valentine's Date?</p>
+        <button class="luxe-button" onclick="startQuest()">Start Quest</button>
+    </div>
+
+    <div id="level-1" class="game-level hidden">
         <h2>Level 1: Geospatial Analysis 🍵</h2>
         <p>Drag us to our favorite seafood soup spot!</p>
         <div id="map"></div>
@@ -58,111 +36,11 @@
 
     <div id="level-2" class="game-level hidden">
         <h2>Level 2: Strategic Appreciation 🍓</h2>
-        <p style="font-style: italic; color: #ffb5a7; font-weight: bold; font-size: 1.2rem;">"Magnus Carlsen Meesho Edition... checkmate me if you can ;)"</p>
+        <p style="font-style: italic; color: #ffb5a7; font-weight: bold;">"Magnus Carlsen Meesho Edition... checkmate me if you can ;)"</p>
         <div id="chess-board" class="chess-container"></div>
-        <p>Tap your Rook (🏰) and slide it to the top row!</p>
+        <p>Move the Black Bishop (♝) to reveal the checkmate!</p>
     </div>
 
     <div id="level-3" class="game-level hidden">
         <h2>Level 3: The Verdict ⚖️</h2>
-        <img src="us.jpg" style="width: 90%; max-width: 400px; border: 15px solid white; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);" onerror="this.src='https://via.placeholder.com/400x300?text=Upload+us.jpg'">
-        <h2 style="color: var(--strawberry); margin-top: 30px;">Will you be my Valentine?</h2>
-        <button class="luxe-button" onclick="alert('Yay! ❤️ Motion Granted!')">Yes!</button>
-    </div>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        const sujata = [18.54014, 73.88345];
-        const soup = [18.53755, 73.87965];
-        let map;
-
-       // --- THE MAP FIX ---
-window.onload = function() {
-    // 1. Create the map
-    map = L.map('map').setView(sujata, 16);
-
-    // 2. Use the FREE provider (No API key / 401 error possible)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
-
-    // 3. Setup the marker
-    const usIcon = L.divIcon({
-        className: 'custom-marker',
-        html: '<img src="us.jpg" style="width:80px;height:80px;border-radius:50%;border:5px solid white;object-fit:cover;" onerror="this.src=\'https://via.placeholder.com/80/ffb5a7/ffffff?text=US\'">',
-        iconSize: [80, 80]
-    });
-
-    const marker = L.marker(sujata, { icon: usIcon, draggable: true }).addTo(map);
-    marker.on('dragend', function() {
-        if (marker.getLatLng().distanceTo(L.latLng(soup)) < 400) {
-            alert("Level 1 Clear! 🍓");
-            nextLevel(2);
-        }
-    });
-
-    // 4. THE MAGIC COMMAND: This forces the map to draw itself
-    setTimeout(() => { map.invalidateSize(); }, 1000);
-};
-            setTimeout(() => { map.invalidateSize(); }, 800);
-        };
-
-        function nextLevel(lvl) {
-            document.querySelectorAll('.game-level').forEach(el => el.classList.add('hidden'));
-            document.getElementById('level-' + lvl).classList.remove('hidden');
-            if (lvl === 2) createChess();
-        }
-
-        function createChess() {
-    const board = document.getElementById('chess-board');
-    board.innerHTML = '';
-    
-    // THE DISCOVERED MATE SETUP:
-    // He moves the Bishop at b1 to reveal the Rook's check on the King at h1!
-    const pieces = {
-        7: '♔',   // White King at h8 (mapped for ease to top right)
-        15: '♟',  // White Pawn h7
-        56: '♝',  // BLACK BISHOP at a1 (The piece he moves)
-        60: '♜',  // BLACK ROOK at e1 (Already pointing at the King!)
-    };
-
-    for (let i = 0; i < 64; i++) {
-        const row = Math.floor(i / 8);
-        const col = i % 8;
-        const sq = document.createElement('div');
-        sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
-        
-        if (pieces[i]) {
-            sq.innerText = pieces[i];
-            // The Bishop is his "Active" piece
-            if (i === 56) sq.style.cursor = 'pointer';
-        }
-
-        sq.onclick = () => {
-            if (window.pieceSelected) {
-                // THE WINNING MOVE: Move Bishop anywhere away from the Rook's line
-                // But let's make him move it to the "b2" diagonal area (i === 49)
-                if (i !== 56 && i !== 60) {
-                    sq.innerText = '♝';
-                    // Clear the old Bishop
-                    document.querySelectorAll('.square').forEach(s => {
-                        if(s.innerText === '♝' && s !== sq) s.innerText = '';
-                    });
-                    
-                    setTimeout(() => {
-                        alert("Discovered Checkmate! Magnus would be terrified. 😉🍓");
-                        nextLevel(3);
-                    }, 300);
-                }
-            } else if (sq.innerText === '♝') {
-                window.pieceSelected = true;
-                sq.style.backgroundColor = 'rgba(255, 181, 167, 0.5)';
-            }
-        };
-        board.appendChild(sq);
-    }
-}
-        }
-    </script>
-</body>
-</html>
+        <img src="us.jpg" style="width: 280px; border: 10px solid white; border-radius: 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);"
