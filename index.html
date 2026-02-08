@@ -114,20 +114,31 @@
         }
 
         function startChess() {
-            Chessboard('board', {
-                draggable: true,
-                dropOffBoard: 'snapback',
-                // SUPER STABLE PIECE THEME URL
-                pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
-                position: '4k1/5ppp/8/8/8/8/8/4R1K1', 
-                onDrop: function(source, target) {
-                    if (target.includes('8')) {
-                        alert("Checkmate! 🍵 Proceeding to the final dataset.");
-                        nextLevel(3);
-                    }
-                }
-            });
+    console.log("Chess Level Started - Using Emoji Pieces 🍓");
+    
+    // This function creates the pieces using emojis so they ALWAYS show up
+    function pieceTemplate(obj) {
+        const pieces = {
+            'wP': '♟', 'wR': '🏰', 'wN': '🐴', 'wB': '♗', 'wQ': '👸', 'wK': '♔',
+            'bP': '♟', 'bR': '🏰', 'bN': '🐴', 'bB': '♗', 'bQ': '👸', 'bK': '♚'
+        };
+        return '<div style="font-size: 40px; line-height: 50px; cursor: pointer;">' + pieces[obj.piece] + '</div>';
+    }
+
+    Chessboard('board', {
+        draggable: true,
+        dropOffBoard: 'snapback',
+        // Instead of a URL, we use our emoji template
+        pieceTheme: pieceTemplate,
+        position: '4k1/5ppp/8/8/8/8/8/4R1K1', 
+        onDrop: function(source, target) {
+            if (target.includes('8')) {
+                alert("Checkmate! 🍵 Proceeding to the final dataset.");
+                nextLevel(3);
+            }
         }
+    });
+}
     </script>
 </body>
 </html>
