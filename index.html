@@ -70,22 +70,60 @@
         }
 
         function createChess() {
-            const board = document.getElementById('chess-board');
-            board.innerHTML = '';
-            for (let i = 0; i < 64; i++) {
-                const row = Math.floor(i / 8);
-                const col = i % 8;
-                const sq = document.createElement('div');
-                sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
-                
-                if (i === 4) sq.innerText = '♚'; // King
-                if (i === 60) {
-                    sq.innerText = '🏰'; // Rook
-                    sq.className += ' rook';
-                    sq.onclick = () => { 
-                        sq.innerText = ''; 
-                        window.rookSelected = true; 
-                        sq.style.backgroundColor = '#ffb5a7'; // Highlight start
+    const board = document.getElementById('chess-board');
+    board.innerHTML = '';
+    // This array sets up the exact puzzle position
+    // Row 0: Top | Row 7: Bottom
+    for (let i = 0; i < 64; i++) {
+        const row = Math.floor(i / 8);
+        const col = i % 8;
+        const sq = document.createElement('div');
+        sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
+        
+        // --- THE PUZZLE SETUP ---
+        if (i === 6) sq.innerText = '♚';      // Black King at g8
+        if (i === 13) sq.innerText = '♟';     // Black Pawn at f7
+        if (i === 14) sq.innerText = '♟';     // Black Pawn at g7
+        if (i === 15) sq.innerText = '♟';     // Black Pawn at h7
+        if (i === 62) sq.innerText = '♔';     // White King at g1
+        
+        if (i === 60) {                       // White Rook starts at e1
+            sq.innerText = '🏰'; 
+            sq.className += ' rook';
+            sq.onclick = () => { 
+                // Visual feedback when he selects the Rook
+                document.querySelectorAll('.square').forEach(s => s.style.boxShadow = 'none');
+                sq.style.boxShadow = 'inset 0 0 10px #ffb5a7';
+                window.rookSelected = true; 
+            };
+        }
+        
+        // --- THE WINNING MOVE ---
+        sq.onclick = (e) => {
+            // If he already clicked the Rook and now clicks any square on the top row (row 0)
+            if (window.rookSelected) {
+                if (row === 0) {
+                    sq.innerText = '🏰';
+                    // Clear the old rook position
+                    document.querySelectorAll('.rook').forEach(r => r.innerText = '');
+                    
+                    setTimeout(() => {
+                        alert("CHECKMATE! 🍵 The evidence is irrefutable.");
+                        nextLevel(3);
+                    }, 300);
+                } else if (i !== 60) {
+                    alert("Almost! Move the Rook to the top row to trap the King.");
+                }
+            } else if (i === 60) {
+                // Handle the first click on the rook
+                sq.innerText = ''; 
+                window.rookSelected = true;
+                sq.style.backgroundColor = 'rgba(255, 181, 167, 0.3)';
+            }
+        };
+        board.appendChild(sq);
+    }
+}
                     };
                 }
                 
