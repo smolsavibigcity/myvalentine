@@ -1,66 +1,41 @@
 window.onload = function() {
-    // 1. Coordinates
-    const sujataApartment = [18.5401, 73.8834];
-    const suonmoi = [18.5375, 73.8796];
-
-    // 2. Initialize Map with a delay to ensure the 'map' div is ready
+    const sujataApartment = [18.54014, 73.88345];
+    const suonmoi = [18.53755, 73.87965];
     const map = L.map('map').setView(sujataApartment, 16);
-
-    // 3. Matcha-themed Map Tiles
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
 
-    // 4. Goal Zone
-    const goal = L.circle(suonmoi, {
-        color: '#9fb8ad',
-        fillColor: '#9fb8ad',
-        fillOpacity: 0.4,
-        radius: 200
-    }).addTo(map);
+    L.circle(suonmoi, { color: '#9fb8ad', fillColor: '#9fb8ad', fillOpacity: 0.3, radius: 200 }).addTo(map);
 
-    // 5. Couple Marker (us.jpg)
     const usIcon = L.divIcon({
         className: 'couple-marker',
-        html: '<img src="us.jpg" style="width:60px;height:60px;border-radius:50%;border:4px solid white;box-shadow:0 4px 10px rgba(0,0,0,0.2);">',
+        html: '<img src="us.jpg" style="width:60px;height:60px;border-radius:50%;border:4px solid white;">',
         iconSize: [60, 60]
     });
 
     const marker = L.marker(sujataApartment, { icon: usIcon, draggable: true }).addTo(map);
 
-    // 6. Success Logic
     marker.on('dragend', function() {
-        const dist = marker.getLatLng().distanceTo(L.latLng(suonmoi));
-        if (dist < 300) {
-            alert("Yay! Destination reached. 🍓 Next quest starting...");
+        if (marker.getLatLng().distanceTo(L.latLng(suonmoi)) < 300) {
+            alert("Congratulations! 🍓 Level 2 Unlocked.");
             nextLevel(2);
         }
     });
-
-    // Make sure map knows its size
-    setTimeout(() => { map.invalidateSize(); }, 500);
 };
 
 function nextLevel(lvl) {
     document.querySelectorAll('.game-level').forEach(el => el.classList.add('hidden'));
-    const next = document.getElementById('level-' + lvl);
-    if (next) {
-        next.classList.remove('hidden');
-        if (lvl === 2) startChess();
-    }
+    document.getElementById('level-' + lvl).classList.remove('hidden');
+    if (lvl === 2) startChess();
 }
 
 function startChess() {
-    console.log("Chess Level Started - Setting up pieces...");
-    var board = Chessboard('board', {
+    Chessboard('board', {
         draggable: true,
-        dropOffBoard: 'snapback',
-        // THIS LINE DOWNLOADS THE PIECES FROM THE WEB
         pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
-        // Start: Rook at e1, King at e8. He must move Rook to e8!
         position: '4k1/5ppp/8/8/8/8/8/4R1K1', 
         onDrop: function(source, target) {
-            // Winning move: Rook moves to the 8th rank
             if (target.includes('8')) {
-                alert("Checkmate! Data Validation Successful. 🍓");
+                alert("Checkmate! 🍵 Proceeding to the final dataset.");
                 nextLevel(3);
             }
         }
