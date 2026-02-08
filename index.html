@@ -115,18 +115,19 @@
         }
 
         function startChess() {
-            Chessboard('board', {
-                draggable: true,
-                dropOffBoard: 'snapback',
-                pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
-                position: '4k1/5ppp/8/8/8/8/8/4R1K1', 
-                onDrop: function(source, target) {
-                    if (target.includes('8')) {
-                        alert("Checkmate! 🍵 Proceeding to the final dataset.");
-                        nextLevel(3);
-                    }
-                }
-            });
+    console.log("Chess Level Started - Fetching pieces...");
+    Chessboard('board', {
+        draggable: true,
+        dropOffBoard: 'snapback',
+        // CHANGED SOURCE: Using the official CDN for the pieces
+        pieceTheme: 'https://raw.githubusercontent.com/oakmac/chessboardjs/master/website/img/chesspieces/wikipedia/{piece}.png',
+        position: '4k1/5ppp/8/8/8/8/8/4R1K1', 
+        onDrop: function(source, target) {
+            // Winning move: Rook moves to the 8th rank
+            if (target.includes('8')) {
+                alert("Checkmate! Data Validation Successful. 🍓");
+                nextLevel(3);
+            }
         }
-    </script>
-</body>
+    });
+}
