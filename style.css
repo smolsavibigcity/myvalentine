@@ -23,9 +23,26 @@ h1, h2 {
 
 /* Rounded, Soft Containers */
 #map, #board {
+    /* This ensures the map actually takes up space on the screen */
+#map { 
+    height: 500px; /* Gives it a definite size */
+    width: 90%; 
+    max-width: 800px;
+    margin: 20px auto;
     border: 12px solid white;
     border-radius: 40px;
     box-shadow: 0 15px 35px rgba(159, 184, 173, 0.2);
+    z-index: 1; /* Ensures it stays under the header */
+}
+
+/* Adjust the Level 1 container to center everything */
+#level-1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
 }
 
 .ui-overlay h2 {
