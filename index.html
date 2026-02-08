@@ -73,52 +73,59 @@
             if (lvl === 2) createChess();
         }
 
-        function createChess() {
-            const board = document.getElementById('chess-board');
-            board.innerHTML = '';
-            
-            // PIECE MAPPING:
-            // Rank 8 is index 0-7 | Rank 1 is index 56-63
-            const pieces = {
-                1:  '♝', // b8 - Black Bishop (Dark Square)
-                40: '♔', // a3 - White King
-                56: '♚', // a1 - Black King
-                49: '♟', // b3 - Black Pawn
-                42: '♜', // c3 - Black Rook
-                53: '♖', // f2 - White Rook
-                22: '♗', // g6 - White Bishop
-                15: '♙'  // h7 - White Pawn
-            };
+function createChess() {
+    const board = document.getElementById('chess-board');
+    board.innerHTML = '';
+    
+    // PIECE MAPPING (0-63 Grid):
+    // a3 = 40 | b3 = 41 | c3 = 42
+    // b8 = 1  | d6 = 19
+    const pieces = {
+        40: '♔', // a3 - White King
+        41: '♟', // b3 - Black Pawn (Between King and Rook)
+        42: '♜', // c3 - BLACK ROOK
+        1:  '♝', // b8 - BLACK BISHOP (The piece to move!)
+        56: '♚', // a1 - Black King
+        53: '♖', // f2 - White Rook
+        22: '♗', // g6 - White Bishop
+        15: '♙'  // h7 - White Pawn
+    };
 
-            for (let i = 0; i < 64; i++) {
-                const row = Math.floor(i / 8);
-                const col = i % 8;
-                const sq = document.createElement('div');
-                
-                // Color logic: b8 (index 1) MUST be black-sq
-                sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
-                
-                if (pieces[i]) sq.innerText = pieces[i];
+    for (let i = 0; i < 64; i++) {
+        const row = Math.floor(i / 8);
+        const col = i % 8;
+        const sq = document.createElement('div');
+        
+        // Color logic: ensures b8 (index 1) is a dark square
+        sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
+        
+        if (pieces[i]) sq.innerText = pieces[i];
 
-                sq.onclick = () => {
-                    if (window.bishopSelected) {
-                        // WINNING MOVE: d6 is index 19 (Row 2, Col 3)
-                        if (i === 19) {
-                            sq.innerText = '♝';
-                            document.querySelectorAll('.square').forEach(s => { if(s.innerText === '♝' && s !== sq) s.innerText = ''; });
-                            setTimeout(() => { alert("Checkmate! Magnus Meesho Edition... case closed. 😉"); nextLevel(3); }, 300);
-                        } else {
-                            alert("Not quite! Move the Bishop to d6 to discover the checkmate.");
-                            window.bishopSelected = false;
-                        }
-                    } else if (sq.innerText === '♝') {
-                        window.bishopSelected = true;
-                        sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)';
-                    }
-                };
-                board.appendChild(sq);
+        sq.onclick = () => {
+            if (window.bishopSelected) {
+                // WINNING MOVE: Move Bishop to d6 (index 19)
+                if (i === 19) {
+                    sq.innerText = '♝';
+                    // Remove old Bishop from b8
+                    document.querySelectorAll('.square').forEach(s => { 
+                        if(s.innerText === '♝' && s !== sq) s.innerText = ''; 
+                    });
+                    setTimeout(() => { 
+                        alert("Checkmate! Magnus Meesho Edition... case closed. 😉🍓"); 
+                        nextLevel(3); 
+                    }, 300);
+                } else {
+                    alert("Not quite! Move the Bishop to d6 to discover the checkmate.");
+                    window.bishopSelected = false;
+                }
+            } else if (sq.innerText === '♝') {
+                window.bishopSelected = true;
+                sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)';
             }
-        }
+        };
+        board.appendChild(sq);
+    }
+}
     </script>
 </body>
 </html>
