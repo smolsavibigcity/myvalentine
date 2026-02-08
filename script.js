@@ -52,9 +52,12 @@ function startChess() {
     var board = Chessboard('board', {
         draggable: true,
         pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
-        position: '4R1k1/5ppp/8/8/8/8/8/6K1',
+        // NEW POSITION: The Rook starts at e1 (bottom) instead of e8 (top)
+        position: '4k1/5ppp/8/8/8/8/8/4R1K1', 
         onDrop: function(source, target) {
+            // Success: Moving the Rook (R) to the 8th rank (the top row)
             if (target.includes('8')) {
+                alert("Checkmate! Data Validation Successful. 🍓");
                 nextLevel(3);
             }
         }
