@@ -10,28 +10,32 @@
         :root { --matcha: #9fb8ad; --strawberry: #ffb5a7; --cream: #fdfaf6; }
         body { background-color: var(--cream); font-family: 'Quicksand', sans-serif; margin: 0; color: #6d597a; text-align: center; }
         .hidden { display: none !important; }
-        .game-level { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .game-level { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
         h2 { font-family: 'Gaegu', cursive; color: var(--matcha); font-size: 3rem; margin: 10px 0; }
         
-        /* Intro Styling */
+        /* Level 0: Intro */
         #level-0 { background-color: #000080; color: #FFFD74; }
         #level-0 h2 { color: #FFFD74; }
 
+        /* Level 1: Map */
         #map { width: 350px; height: 400px; border: 10px solid white; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: #eee; outline: 2px solid #ffb5a7; }
+
+        /* Level 2: Chess */
         .chess-container { width: 360px; height: 360px; display: grid; grid-template-columns: repeat(8, 1fr); border: 10px solid #6d597a; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin: 20px auto; }
         .square { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 35px; cursor: pointer; }
         .white-sq { background-color: #fdfaf6; }
         .black-sq { background-color: #9fb8ad; }
+
+        /* Level 3: Desserts */
+        .dessert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .dessert-card { background: white; border: 3px solid var(--matcha); border-radius: 15px; padding: 15px; cursor: grab; width: 130px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        #plate { width: 220px; height: 220px; border: 5px dashed var(--strawberry); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--strawberry); font-weight: bold; margin-top: 40px; background: rgba(255,255,255,0.5); }
+
         .luxe-button { background: var(--strawberry); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Gaegu', cursive; font-size: 1.8rem; cursor: pointer; margin-top: 20px; transition: 0.3s; }
         .luxe-button:hover { transform: scale(1.05); }
-
-        /* Dessert Styling */
-        .dessert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
-        .dessert-card { background: white; border: 3px solid var(--matcha); border-radius: 15px; padding: 15px; cursor: grab; width: 130px; font-weight: bold; font-size: 0.9rem; }
-        #plate { width: 220px; height: 220px; border: 5px dashed var(--strawberry); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--strawberry); font-weight: bold; margin-top: 40px; background: rgba(255,255,255,0.5); }
     </style>
 </head>
-<body onload="initIntro()">
+<body>
 
     <div id="level-0" class="game-level">
         <h2>hiii my sweetie pieee 💕</h2>
@@ -79,14 +83,13 @@
         const soup = [18.53755, 73.87965];
         let map;
 
-        function initIntro() {
-            document.querySelectorAll('.game-level').forEach(el => el.classList.add('hidden'));
-            document.getElementById('level-0').classList.remove('hidden');
-        }
-
         function nextLevel(lvl) {
+            // Hide all levels
             document.querySelectorAll('.game-level').forEach(el => el.classList.add('hidden'));
+            // Show the next level
             document.getElementById('level-' + lvl).classList.remove('hidden');
+            
+            // Initialize level-specific logic
             if (lvl === 1) initMap();
             if (lvl === 2) createChess();
             if (lvl === 3) initDesserts();
@@ -96,48 +99,12 @@
             if (map) return;
             map = L.map('map').setView(sujata, 16);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            const usIcon = L.divIcon({ className: 'custom-marker', html: '<img src="us.jpg" style="width:70px;height:70px;border-radius:50%;border:4px solid white;object-fit:cover;" onerror="this.src=\'https://via.placeholder.com/70/ffb5a7/ffffff?text=US\'">', iconSize: [70, 70] });
+            const usIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<img src="us.jpg" style="width:70px;height:70px;border-radius:50%;border:4px solid white;object-fit:cover;" onerror="this.src=\'https://via.placeholder.com/70/ffb5a7/ffffff?text=US\'">',
+                iconSize: [70, 70]
+            });
             const marker = L.marker(sujata, { icon: usIcon, draggable: true }).addTo(map);
             marker.on('dragend', function() {
                 if (marker.getLatLng().distanceTo(L.latLng(soup)) < 400) {
-                    alert("Level 1 Clear! 🍓");
-                    nextLevel(2);
-                }
-            });
-            setTimeout(() => { map.invalidateSize(); }, 600);
-        }
-
-        function createChess() {
-            const board = document.getElementById('chess-board');
-            board.innerHTML = '';
-            const pieces = { 40: '♔', 41: '♟', 42: '♜', 1: '♝', 56: '♚', 53: '♖', 22: '♗', 15: '♙' };
-            for (let i = 0; i < 64; i++) {
-                const row = Math.floor(i / 8); const col = i % 8;
-                const sq = document.createElement('div');
-                sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
-                if (pieces[i]) sq.innerText = pieces[i];
-                sq.onclick = () => {
-                    if (window.bishopSelected) {
-                        if (i === 19) {
-                            sq.innerText = '♝';
-                            document.querySelectorAll('.square').forEach(s => { if(s.innerText === '♝' && s !== sq) s.innerText = ''; });
-                            setTimeout(() => { alert("Checkmate! 🍓"); nextLevel(3); }, 300);
-                        } else { window.bishopSelected = false; }
-                    } else if (sq.innerText === '♝') {
-                        window.bishopSelected = true;
-                        sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)';
-                    }
-                };
-                board.appendChild(sq);
-            }
-        }
-
-        function initDesserts() {
-            const cards = document.querySelectorAll('.dessert-card');
-            const plate = document.getElementById('plate');
-            cards.forEach(card => card.addEventListener('dragstart', (e) => e.dataTransfer.setData('text', e.target.id)));
-            plate.addEventListener('dragover', (e) => e.preventDefault());
-            plate.addEventListener('drop', (e) => {
-                const id = e.dataTransfer.getData('text');
-                if (id === 'tiramisu' || id === 'mango') {
-                    alert("Correct!
+                    alert("Level 1 Clear!
