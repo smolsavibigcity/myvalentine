@@ -77,26 +77,52 @@
         function createChess() {
     const board = document.getElementById('chess-board');
     board.innerHTML = '';
-    // A more tactical "Meesho" setup
+    
+    // THE "MEESHO MAGNUS" SETUP: Clear path for the Rook at f3
+    const pieces = {
+        7: '♚',   // Black King at h8 (The corner)
+        15: '🐴', // Black Knight at h7 (Trapping his own King)
+        23: '♟',  // Black Pawn at h6 (Double trapping him)
+        14: '♟',  // Black Pawn at g7 (Wall of defense)
+        53: '🏰', // White Rook starts at f2 (Straight line to f8!)
+        62: '♔',  // White King at g1 (Just watching)
+    };
+
     for (let i = 0; i < 64; i++) {
         const row = Math.floor(i / 8);
         const col = i % 8;
         const sq = document.createElement('div');
         sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
         
-        // Setup: King is near the corner, blocked by his own Knight and Pawns
-        if (i === 7) sq.innerText = '♚';   // Black King at h8
-        if (i === 14) sq.innerText = '♟';  // Pawn g7
-        if (i === 15) sq.innerText = '🐴'; // Black Knight at h7 (Blocking the King!)
-        if (i === 23) sq.innerText = '♟';  // Pawn h6
-        
-        if (i === 54) {                    // Your Rook starts at g2
-            sq.innerText = '🏰';
-            sq.className += ' rook';
-            sq.onclick = () => { 
-                sq.innerText = ''; 
-                window.rookSelected = true; 
-                sq.style.backgroundColor = '#ffb5a7'; // Matcha highlight
+        if (pieces[i]) {
+            sq.innerText = pieces[i];
+            if (i === 53) sq.className += ' rook';
+        }
+
+        sq.onclick = () => {
+            if (window.rookSelected) {
+                // THE WINNING MOVE: Rook slides to f8 (i === 5)
+                // This is a direct checkmate because the King is stuck behind his Knight!
+                if (i === 5) {
+                    sq.innerText = '🏰';
+                    document.querySelectorAll('.rook').forEach(r => r.innerText = '');
+                    setTimeout(() => {
+                        alert("Magnus Carlsen Meesho Edition... Checkmate! 😉🍓");
+                        nextLevel(3);
+                    }, 300);
+                } else {
+                    alert("Not quite Magnus! Slide the Rook to the very top row.");
+                    window.rookSelected = false;
+                    document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
+                }
+            } else if (i === 53) {
+                window.rookSelected = true;
+                sq.style.backgroundColor = 'rgba(255, 181, 167, 0.5)'; // Soft strawberry highlight
+            }
+        };
+        board.appendChild(sq);
+    }
+}
             };
         }
         
