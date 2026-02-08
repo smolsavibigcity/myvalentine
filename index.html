@@ -12,7 +12,7 @@
         .hidden { display: none !important; }
         .game-level { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
         h2 { font-family: 'Gaegu', cursive; color: var(--matcha); font-size: 2.5rem; margin: 5px 0; }
-        #map { width: 350px; height: 400px; border: 10px solid white; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: #eee; }
+        #map { width: 350px; height: 400px; border: 10px solid white; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: #ccc; }
         .chess-container { width: 320px; height: 320px; display: grid; grid-template-columns: repeat(8, 1fr); border: 10px solid white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px auto; background: white; }
         .square { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 30px; }
         .white-sq { background-color: #fdfaf6; }
@@ -37,118 +37,11 @@
 
     <div id="level-3" class="game-level hidden">
         <h2>Level 3: The Verdict ⚖️</h2>
-        <img src="us.jpg" style="width: 280px; border: 10px solid white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);" onerror="this.src='https://via.placeholder.com/280x200?text=Upload+us.jpg'">
+        <img src="us.jpg" style="width: 280px; border: 10px solid white; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/280x200?text=Upload+us.jpg'">
         <h2 style="color: var(--strawberry);">Will you be my Valentine?</h2>
-        <button onclick="alert('Yay! ❤️ Reservation confirmed for the Grandmaster!')" style="background: var(--strawberry); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Gaegu', cursive; font-size: 1.5rem; cursor: pointer;">Motion Granted!</button>
+        <button onclick="alert('Yay! ❤️ Motion Granted!')" style="background: var(--strawberry); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Gaegu', cursive; font-size: 1.5rem; cursor: pointer;">Yes!</button>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        const sujata = [18.54014, 73.88345];
-        const soup = [18.53755, 73.87965];
-        let map;
-
-        window.onload = function() {
-            map = L.map('map').setView(sujata, 16);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-            const usIcon = L.divIcon({
-                className: 'custom-marker',
-                html: '<img src="us.jpg" style="width:60px;height:60px;border-radius:50%;border:4px solid white;object-fit:cover;" onerror="this.src=\'https://via.placeholder.com/60/ffb5a7/ffffff?text=US\'">',
-                iconSize: [60, 60]
-            });
-
-            const marker = L.marker(sujata, { icon: usIcon, draggable: true }).addTo(map);
-            marker.on('dragend', function() {
-                if (marker.getLatLng().distanceTo(L.latLng(soup)) < 400) {
-                    alert("Level 1 Clear! 🍓 Ready for the Chess?");
-                    nextLevel(2);
-                }
-            });
-            setTimeout(() => { map.invalidateSize(); }, 600);
-        };
-
-        function nextLevel(lvl) {
-            document.querySelectorAll('.game-level').forEach(el => el.classList.add('hidden'));
-            document.getElementById('level-' + lvl).classList.remove('hidden');
-            if (lvl === 2) createChess();
-        }
-
-        function createChess() {
-    const board = document.getElementById('chess-board');
-    board.innerHTML = '';
-    
-    // THE "MEESHO MAGNUS" SETUP: Clear path for the Rook at f3
-    const pieces = {
-        7: '♚',   // Black King at h8 (The corner)
-        15: '🐴', // Black Knight at h7 (Trapping his own King)
-        23: '♟',  // Black Pawn at h6 (Double trapping him)
-        14: '♟',  // Black Pawn at g7 (Wall of defense)
-        53: '🏰', // White Rook starts at f2 (Straight line to f8!)
-        62: '♔',  // White King at g1 (Just watching)
-    };
-
-    for (let i = 0; i < 64; i++) {
-        const row = Math.floor(i / 8);
-        const col = i % 8;
-        const sq = document.createElement('div');
-        sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
-        
-        if (pieces[i]) {
-            sq.innerText = pieces[i];
-            if (i === 53) sq.className += ' rook';
-        }
-
-        sq.onclick = () => {
-            if (window.rookSelected) {
-                // THE WINNING MOVE: Rook slides to f8 (i === 5)
-                // This is a direct checkmate because the King is stuck behind his Knight!
-                if (i === 5) {
-                    sq.innerText = '🏰';
-                    document.querySelectorAll('.rook').forEach(r => r.innerText = '');
-                    setTimeout(() => {
-                        alert("Magnus Carlsen Meesho Edition... Checkmate! 😉🍓");
-                        nextLevel(3);
-                    }, 300);
-                } else {
-                    alert("Not quite Magnus! Slide the Rook to the very top row.");
-                    window.rookSelected = false;
-                    document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
-                }
-            } else if (i === 53) {
-                window.rookSelected = true;
-                sq.style.backgroundColor = 'rgba(255, 181, 167, 0.5)'; // Soft strawberry highlight
-            }
-        };
-        board.appendChild(sq);
-    }
-}
-            };
-        }
-        
-        sq.onclick = () => {
-            if (window.rookSelected) {
-                // The ONLY winning move: Slide the Rook to g8 (i === 6)
-                // This traps the King in the corner because the Knight is in his way!
-                if (i === 6) {
-                    sq.innerText = '🏰';
-                    setTimeout(() => { 
-                        alert("Magnus Carlsen Meesho Edition... Checkmate! 😉🍓"); 
-                        nextLevel(3); 
-                    }, 300);
-                } else {
-                    alert("Not quite Magnus! That move leaves an escape route.");
-                    window.rookSelected = false; // Reset so he can try again
-                    createChess(); 
-                }
-            } else if (i === 54) {
-                sq.innerText = ''; 
-                window.rookSelected = true;
-            }
-        };
-        board.appendChild(sq);
-    }
-}
-    </script>
-</body>
-</html>
+        const sujata = [18.54014, 7
