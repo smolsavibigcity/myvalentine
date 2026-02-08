@@ -1,23 +1,65 @@
-body { background: #000; color: white; margin: 0; overflow: hidden; }
-.hidden { display: none !important; }
-.game-level { height: 100vh; width: 100vw; }
-#map { height: 100%; }
+@import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Quicksand:wght@300;500;700&display=swap');
 
-.ui-overlay {
-    position: absolute; top: 30px; width: 100%; text-align: center;
-    z-index: 1000; pointer-events: none;
+:root {
+    --matcha-green: #9fb8ad;
+    --strawberry-pink: #ffb5a7;
+    --cream-bg: #fdfaf6;
+    --berry-text: #6d597a;
+}
+
+body {
+    background-color: var(--cream-bg);
+    color: var(--berry-text);
+    font-family: 'Quicksand', sans-serif;
+    margin: 0;
+    overflow: hidden;
+}
+
+h1, h2 {
+    font-family: 'Gaegu', cursive; /* Cute, handwritten feel */
+    color: var(--matcha-green);
+    font-size: 2.5rem;
+}
+
+/* Rounded, Soft Containers */
+#map, #board {
+    border: 12px solid white;
+    border-radius: 40px;
+    box-shadow: 0 15px 35px rgba(159, 184, 173, 0.2);
 }
 
 .ui-overlay h2 {
-    background: rgba(0,0,0,0.8); display: inline-block;
-    padding: 10px 30px; border: 1px solid gold; color: gold;
-    border-radius: 50px; text-transform: uppercase; letter-spacing: 2px;
+    background: white;
+    color: var(--berry-text);
+    padding: 10px 30px;
+    border-radius: 30px;
+    border: 3px dashed var(--strawberry-pink); /* Cute "stitched" look */
 }
 
-.luxe-card {
-    text-align: center; padding-top: 20vh;
-    background: linear-gradient(145deg, #1a1a1a, #000);
-    height: 100%;
+/* Polaroid Photo Frame */
+.photo-frame {
+    background: white;
+    padding: 15px 15px 40px 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    border-radius: 4px;
+    transform: rotate(-2deg);
 }
 
-.couple-marker img { border: 2px solid gold; box-shadow: 0 0 10px gold; }
+button, .luxe-button {
+    background-color: var(--strawberry-pink);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-family: 'Gaegu', cursive;
+    cursor: pointer;
+    box-shadow: 0 6px 0px #e6a497; /* 3D sticker look */
+}
+
+button:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0px #e6a497;
+}
+
+.hidden { display: none !important; }
