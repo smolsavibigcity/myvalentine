@@ -68,12 +68,18 @@ function startChess() {
     console.log("Chess Level Started");
     var board = Chessboard('board', {
         draggable: true,
-        position: '4R1k1/5ppp/8/8/8/8/8/6K1',
+        // THIS LINE FIXES THE PIECES:
+        pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
+        position: '4R1k1/5ppp/8/8/8/8/8/6K1', 
         onDrop: function(source, target) {
-            // If they move the Rook to the back rank
+            // Success: Moving the Rook (R) to the 8th rank
             if (target.includes('8')) {
-                alert("Checkmate! Level 2 Complete.");
+                alert("Checkmate! Data Validation Successful. 🍓");
                 nextLevel(3);
+            }
+        }
+    });
+}
             }
         }
     });
