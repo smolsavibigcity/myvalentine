@@ -15,10 +15,22 @@
         #map { width: 350px; height: 400px; border: 10px solid white; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: #eee; outline: 2px solid #ffb5a7; }
         .chess-container { width: 360px; height: 360px; display: grid; grid-template-columns: repeat(8, 1fr); border: 10px solid #6d597a; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin: 20px auto; }
         .square { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 35px; cursor: pointer; }
-        /* Classic Wood/Matcha Theme */
         .white-sq { background-color: #fdfaf6; }
         .black-sq { background-color: #9fb8ad; }
         .luxe-button { background: var(--strawberry); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Gaegu', cursive; font-size: 1.8rem; cursor: pointer; margin-top: 20px; }
+
+        /* Dessert Level Styles */
+        .dessert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .dessert-card { 
+            background: white; border: 3px solid var(--matcha); border-radius: 15px; 
+            padding: 15px; cursor: grab; width: 130px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+            font-weight: bold; font-size: 0.9rem;
+        }
+        #plate { 
+            width: 220px; height: 220px; border: 5px dashed var(--strawberry); 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            color: var(--strawberry); font-weight: bold; margin-top: 40px; background: rgba(255,255,255,0.5);
+        }
     </style>
 </head>
 <body>
@@ -37,7 +49,21 @@
     </div>
 
     <div id="level-3" class="game-level hidden">
-        <h2>Level 3: The Verdict ⚖️</h2>
+        <h2>Level 3: Sweet Deductions 🍰</h2>
+        <p>Drag my favorite dessert onto the plate!</p>
+        <div class="dessert-grid">
+            <div class="dessert-card" draggable="true" id="mango">🥭 Mango Sticky Rice</div>
+            <div class="dessert-card" draggable="true" id="tiramisu">☕ Tiramisu</div>
+            <div class="dessert-card" draggable="true" id="lava">🍫 Choco Lava Cake</div>
+            <div class="dessert-card" draggable="true" id="pudding">🍮 Sticky Toffee Pudding</div>
+            <div class="dessert-card" draggable="true" id="icecream">🍦 Cookies & Cream</div>
+            <div class="dessert-card" draggable="true" id="pancakes">🥞 Date Pancakes</div>
+        </div>
+        <div id="plate">Drag dessert here 🍽️</div>
+    </div>
+
+    <div id="level-4" class="game-level hidden">
+        <h2>Level 4: The Verdict ⚖️</h2>
         <img src="us.jpg" style="width: 280px; border: 15px solid white; border-radius: 20px;" onerror="this.src='https://via.placeholder.com/280/ffb5a7/ffffff?text=US'">
         <h2 style="color: var(--strawberry);">Will you be my Valentine?</h2>
         <button class="luxe-button" onclick="alert('Yay! ❤️ Motion Granted!')">Yes!</button>
@@ -71,61 +97,55 @@
             document.querySelectorAll('.game-level').forEach(el => el.classList.add('hidden'));
             document.getElementById('level-' + lvl).classList.remove('hidden');
             if (lvl === 2) createChess();
+            if (lvl === 3) initDesserts();
         }
 
-function createChess() {
-    const board = document.getElementById('chess-board');
-    board.innerHTML = '';
-    
-    // PIECE MAPPING (0-63 Grid):
-    // a3 = 40 | b3 = 41 | c3 = 42
-    // b8 = 1  | d6 = 19
-    const pieces = {
-        40: '♔', // a3 - White King
-        41: '♟', // b3 - Black Pawn (Between King and Rook)
-        42: '♜', // c3 - BLACK ROOK
-        1:  '♝', // b8 - BLACK BISHOP (The piece to move!)
-        56: '♚', // a1 - Black King
-        53: '♖', // f2 - White Rook
-        22: '♗', // g6 - White Bishop
-        15: '♙'  // h7 - White Pawn
-    };
+        function createChess() {
+            const board = document.getElementById('chess-board');
+            board.innerHTML = '';
+            const pieces = { 40: '♔', 41: '♟', 42: '♜', 1: '♝', 56: '♚', 53: '♖', 22: '♗', 15: '♙' };
 
-    for (let i = 0; i < 64; i++) {
-        const row = Math.floor(i / 8);
-        const col = i % 8;
-        const sq = document.createElement('div');
-        
-        // Color logic: ensures b8 (index 1) is a dark square
-        sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
-        
-        if (pieces[i]) sq.innerText = pieces[i];
+            for (let i = 0; i < 64; i++) {
+                const row = Math.floor(i / 8); const col = i % 8;
+                const sq = document.createElement('div');
+                sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
+                if (pieces[i]) sq.innerText = pieces[i];
 
-        sq.onclick = () => {
-            if (window.bishopSelected) {
-                // WINNING MOVE: Move Bishop to d6 (index 19)
-                if (i === 19) {
-                    sq.innerText = '♝';
-                    // Remove old Bishop from b8
-                    document.querySelectorAll('.square').forEach(s => { 
-                        if(s.innerText === '♝' && s !== sq) s.innerText = ''; 
-                    });
-                    setTimeout(() => { 
-                        alert("Checkmate! Magnus Meesho Edition... case closed. 😉🍓"); 
-                        nextLevel(3); 
-                    }, 300);
-                } else {
-                    alert("Not quite! Move the Bishop to d6 to discover the checkmate.");
-                    window.bishopSelected = false;
-                }
-            } else if (sq.innerText === '♝') {
-                window.bishopSelected = true;
-                sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)';
+                sq.onclick = () => {
+                    if (window.bishopSelected) {
+                        if (i === 19) {
+                            sq.innerText = '♝';
+                            document.querySelectorAll('.square').forEach(s => { if(s.innerText === '♝' && s !== sq) s.innerText = ''; });
+                            setTimeout(() => { alert("Checkmate! Magnus Meesho Edition... case closed. 😉🍓"); nextLevel(3); }, 300);
+                        } else { alert("Not quite!"); window.bishopSelected = false; }
+                    } else if (sq.innerText === '♝') {
+                        window.bishopSelected = true;
+                        sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)';
+                    }
+                };
+                board.appendChild(sq);
             }
-        };
-        board.appendChild(sq);
-    }
-}
+        }
+
+        function initDesserts() {
+            const cards = document.querySelectorAll('.dessert-card');
+            const plate = document.getElementById('plate');
+
+            cards.forEach(card => {
+                card.addEventListener('dragstart', (e) => e.dataTransfer.setData('text', e.target.id));
+            });
+
+            plate.addEventListener('dragover', (e) => e.preventDefault());
+            plate.addEventListener('drop', (e) => {
+                const id = e.dataTransfer.getData('text');
+                if (id === 'tiramisu' || id === 'mango') {
+                    alert("Correct! Excellent taste. 😉🍰");
+                    nextLevel(4);
+                } else {
+                    alert("Try again! That's not my favorite... 🙅‍♀️");
+                }
+            });
+        }
     </script>
 </body>
 </html>
