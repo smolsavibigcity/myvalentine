@@ -24,10 +24,16 @@ const marker = L.marker([18.54014, 73.88345], {icon: usIcon, draggable: true}).a
 
 // 4. Easy-mode check
 marker.on('dragend', function() {
-    const distance = marker.getLatLng().distanceTo(targetCircle.getLatLng());
-    
-    // If he gets within 150 meters (very generous!), he wins
-    if (distance < 150) {
-        nextLevel(2);
+    const currentPos = marker.getLatLng();
+    const distance = currentPos.distanceTo(soupLocation);
+
+    // This checks if you are within 500 meters (about 5-6 blocks)
+    // Much easier for him to trigger!
+    if (distance < 500) {
+        alert("Congratulations! Data Match Found. Proceeding to the next quest...");
+        nextLevel(2); // This triggers the Chess Level
+    } else {
+        // Optional: A little hint if he's still too far away
+        console.log("Still searching for the soup... Distance: " + Math.round(distance) + "m");
     }
 });
