@@ -16,15 +16,14 @@
         .game-level { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 20px; }
         h2 { font-family: 'Gaegu', cursive; color: var(--matcha); font-size: 2.5rem; margin: 10px 0; }
         
-        /* MAP STYLING - Force visibility */
+        /* Map Visibility Fix */
         #map { 
             width: 350px; 
             height: 400px; 
             border: 10px solid white; 
             border-radius: 40px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            background-color: #fce4ec; /* Light pink placeholder */
-            position: relative;
+            background-color: #fce4ec; 
             z-index: 1;
         }
         
@@ -51,7 +50,7 @@
     <div id="level-3" class="game-level hidden">
         <h2>Level 3: The Initial Dataset 🍵</h2>
         <div class="photo-frame">
-            <img src="first-photo.jpg" alt="Our first picture" style="width: 100%; max-width: 280px; border-radius: 5px;" onerror="this.src='https://via.placeholder.com/280x200?text=Upload+First+Photo'">
+            <img src="first-photo.jpg" alt="Upload first-photo.jpg" style="width: 100%; max-width: 280px; border-radius: 5px;" onerror="this.src='https://via.placeholder.com/280x200?text=Upload+First+Photo'">
         </div>
         <button class="luxe-button" onclick="nextLevel('final')">View Final Verdict</button>
     </div>
@@ -76,13 +75,13 @@
         let map;
 
         function startQuest() {
-            // Ensure the map container is empty before initializing
-            if (map) { map.remove(); }
-
+            // Initialize map with a new provider
             map = L.map('map').setView(sujataApartment, 16);
             
-            // Using a different tile provider to see if the previous one was blocked
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            // NEW TILE PROVIDER (CartoDB Voyager - very reliable)
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                attribution: '©OpenStreetMap'
+            }).addTo(map);
             
             L.circle(suonmoi, { color: '#9fb8ad', fillColor: '#9fb8ad', fillOpacity: 0.3, radius: 200 }).addTo(map);
 
@@ -102,8 +101,8 @@
                 }
             });
 
-            // Force map to recognize its size after a short delay
-            setTimeout(() => { map.invalidateSize(); }, 500);
+            // Re-render the map to fix "Pink Box" syndrome
+            setTimeout(() => { map.invalidateSize(); }, 800);
         }
 
         window.onload = startQuest;
@@ -115,19 +114,20 @@
         }
 
         function startChess() {
-    console.log("Chess Level Started - Fetching pieces...");
-    Chessboard('board', {
-        draggable: true,
-        dropOffBoard: 'snapback',
-        // CHANGED SOURCE: Using the official CDN for the pieces
-        pieceTheme: 'https://raw.githubusercontent.com/oakmac/chessboardjs/master/website/img/chesspieces/wikipedia/{piece}.png',
-        position: '4k1/5ppp/8/8/8/8/8/4R1K1', 
-        onDrop: function(source, target) {
-            // Winning move: Rook moves to the 8th rank
-            if (target.includes('8')) {
-                alert("Checkmate! Data Validation Successful. 🍓");
-                nextLevel(3);
-            }
+            Chessboard('board', {
+                draggable: true,
+                dropOffBoard: 'snapback',
+                // SUPER STABLE PIECE THEME URL
+                pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
+                position: '4k1/5ppp/8/8/8/8/8/4R1K1', 
+                onDrop: function(source, target) {
+                    if (target.includes('8')) {
+                        alert("Checkmate! 🍵 Proceeding to the final dataset.");
+                        nextLevel(3);
+                    }
+                }
+            });
         }
-    });
-}
+    </script>
+</body>
+</html>
