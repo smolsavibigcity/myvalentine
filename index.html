@@ -75,43 +75,54 @@
         }
 
         function createChess() {
-            const board = document.getElementById('chess-board');
-            board.innerHTML = '';
-            // Setup: King is trapped by pawns, Rook is ready to move up
-            for (let i = 0; i < 64; i++) {
-                const row = Math.floor(i / 8);
-                const sq = document.createElement('div');
-                sq.className = 'square ' + ((row + (i % 8)) % 2 === 0 ? 'white-sq' : 'black-sq');
-                
-                if (i === 6) sq.innerText = '♚';   // King trapped at g8
-                if (i === 13) sq.innerText = '♟';  // Pawn f7
-                if (i === 14) sq.innerText = '♟';  // Pawn g7
-                if (i === 15) sq.innerText = '♟';  // Pawn h7
-                
-                if (i === 62) {                    // Your Rook at g1 (Direct path to King)
-                    sq.innerText = '🏰';
-                    sq.className += ' rook';
-                    sq.onclick = () => { 
-                        sq.innerText = ''; 
-                        window.rookSelected = true; 
-                        sq.style.backgroundColor = '#ffb5a7';
-                    };
-                }
-                
-                sq.onclick = () => {
-                    if (window.rookSelected) {
-                        if (row === 0) { // Any square on the top row wins
-                            sq.innerText = '🏰';
-                            setTimeout(() => { alert("Checkmate! Magnus would be proud. 😉"); nextLevel(3); }, 300);
-                        }
-                    } else if (i === 62) {
-                        sq.innerText = ''; 
-                        window.rookSelected = true;
-                    }
-                };
-                board.appendChild(sq);
-            }
+    const board = document.getElementById('chess-board');
+    board.innerHTML = '';
+    // A more tactical "Meesho" setup
+    for (let i = 0; i < 64; i++) {
+        const row = Math.floor(i / 8);
+        const col = i % 8;
+        const sq = document.createElement('div');
+        sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
+        
+        // Setup: King is near the corner, blocked by his own Knight and Pawns
+        if (i === 7) sq.innerText = '♚';   // Black King at h8
+        if (i === 14) sq.innerText = '♟';  // Pawn g7
+        if (i === 15) sq.innerText = '🐴'; // Black Knight at h7 (Blocking the King!)
+        if (i === 23) sq.innerText = '♟';  // Pawn h6
+        
+        if (i === 54) {                    // Your Rook starts at g2
+            sq.innerText = '🏰';
+            sq.className += ' rook';
+            sq.onclick = () => { 
+                sq.innerText = ''; 
+                window.rookSelected = true; 
+                sq.style.backgroundColor = '#ffb5a7'; // Matcha highlight
+            };
         }
+        
+        sq.onclick = () => {
+            if (window.rookSelected) {
+                // The ONLY winning move: Slide the Rook to g8 (i === 6)
+                // This traps the King in the corner because the Knight is in his way!
+                if (i === 6) {
+                    sq.innerText = '🏰';
+                    setTimeout(() => { 
+                        alert("Magnus Carlsen Meesho Edition... Checkmate! 😉🍓"); 
+                        nextLevel(3); 
+                    }, 300);
+                } else {
+                    alert("Not quite Magnus! That move leaves an escape route.");
+                    window.rookSelected = false; // Reset so he can try again
+                    createChess(); 
+                }
+            } else if (i === 54) {
+                sq.innerText = ''; 
+                window.rookSelected = true;
+            }
+        };
+        board.appendChild(sq);
+    }
+}
     </script>
 </body>
 </html>
