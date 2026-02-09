@@ -115,7 +115,7 @@
             });
             const marker = L.marker(sujata, { icon: usIcon, draggable: true }).addTo(map);
             marker.on('dragend', function() {
-                if (marker.getLatLng().distanceTo(L.latLng(soup)) < 400) {
+                if (marker.getLatLng().distanceTo(L.latLng(soup)) < 200) {
                     alert("we made itt yummy yummy soup!! 🍓");
                     nextLevel(2);
                 }
