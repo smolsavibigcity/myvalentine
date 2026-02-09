@@ -9,23 +9,157 @@
         @import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Quicksand:wght@500&display=swap');
         :root { --matcha: #9fb8ad; --strawberry: #ffb5a7; --cream: #fdfaf6; }
         body { background-color: var(--cream); font-family: 'Quicksand', sans-serif; margin: 0; color: #6d597a; text-align: center; overflow-x: hidden; }
-        
         .game-level { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
         .active-level { display: flex !important; }
-
         h2 { font-family: 'Gaegu', cursive; color: var(--matcha); font-size: 3rem; margin: 10px 0; }
-        
-        /* LEVEL 0: TOP-ALIGNED CAT INTRO */
-        #level-0 { 
-            background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('wizard-bg.jpg');
-            background-size: cover;
-            background-position: center;
-            justify-content: flex-start; 
-            padding-top: 5vh;
-        }
-
+        #level-0 { background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('wizard-bg.jpg'); background-size: cover; background-position: center; justify-content: flex-start; padding-top: 5vh; }
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
         @keyframes glow { 0% { text-shadow: 0 0 10px #FFFD74; } 50% { text-shadow: 0 0 30px #FFFD74; } 100% { text-shadow: 0 0 10px #FFFD74; } }
-
         .magic-container { animation: float 4s ease-in-out infinite; display: flex; flex-direction: column; align-items: center; }
-        #level-0 h2 { color: #FFFD74; animation: glow 3s ease-in-out infinite; font-size: 4rem; text-shadow: 2px 2px 15px rgba(0,
+        #level-0 h2 { color: #FFFD74; animation: glow 3s ease-in-out infinite; font-size: 4rem; text-shadow: 2px 2px 15px rgba(0,0,0,0.8); }
+        .cat-container { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
+        .cat-img { width: 120px; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5)); }
+        .speech-bubble { background: white; border-radius: 20px; padding: 15px; position: relative; color: #2D2424; font-weight: bold; max-width: 250px; margin-bottom: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .speech-bubble::after { content: ''; position: absolute; bottom: -10px; left: 50%; border-width: 10px 10px 0; border-style: solid; border-color: white transparent transparent; transform: translateX(-50%); }
+        .choice-buttons { display: flex; gap: 10px; margin-top: 10px; }
+        .mini-button { background: #ffb5a7; border: none; padding: 10px 20px; border-radius: 20px; color: white; cursor: pointer; font-weight: bold; }
+        #map { width: 90vw; max-width: 600px; height: 500px; border: 12px solid white; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: #eee; outline: 2px solid #ffb5a7; }
+        .chess-container { width: 360px; height: 360px; display: grid; grid-template-columns: repeat(8, 1fr); border: 10px solid #6d597a; margin: 20px auto; }
+        .square { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 35px; cursor: pointer; }
+        .white-sq { background-color: #fdfaf6; }
+        .black-sq { background-color: #9fb8ad; }
+        .dessert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .dessert-card { background: white; border: 3px solid var(--matcha); border-radius: 15px; padding: 15px; cursor: grab; width: 130px; font-weight: bold; font-size: 0.9rem; }
+        #plate { width: 220px; height: 220px; border: 5px dashed var(--strawberry); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--strawberry); font-weight: bold; margin-top: 40px; background: rgba(255,255,255,0.5); }
+        .luxe-button { background: var(--strawberry); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Gaegu', cursive; font-size: 1.8rem; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+    </style>
+</head>
+<body>
+    <div id="level-0" class="game-level active-level">
+        <div class="magic-container">
+            <h2>A Very Nom Quest</h2>
+            <div class="cat-container">
+                <div id="fairy-speech" class="speech-bubble">Mew! Halt right there! Who goes there? 🐾</div>
+                <img src="https://cdni.iconscout.com/illustration/premium/thumb/cute-cat-illustration-download-in-svg-png-gif-file-formats--pet-animal-kitten-pack-illustrations-4913253.png" class="cat-img" alt="Cat Narrator">
+            </div>
+            <div id="choices" class="choice-buttons">
+                <button class="mini-button" onclick="talkToFairy('stranger')">Just a traveler...</button>
+                <button class="mini-button" onclick="talkToFairy('hero')">A handsome hero!</button>
+            </div>
+            <button id="final-start-btn" class="luxe-button" style="display:none;" onclick="nextLevel(1)">challenge accepted</button>
+        </div>
+    </div>
+    <div id="level-1" class="game-level">
+        <h2>hungry hungry hippos 🦛🍵</h2>
+        <p>help us find our way to our seafood soup spot!</p>
+        <div id="map"></div>
+    </div>
+    <div id="level-2" class="game-level">
+        <h2>my lil magnus carlsen 🍓</h2>
+        <p style="font-style: italic; color: #ffb5a7; font-weight: bold;">checkmate me if you can ;)</p>
+        <div id="chess-board" class="chess-container"></div>
+        <p>think like magnus not the meesho version hehe</p>
+    </div>
+    <div id="level-3" class="game-level">
+        <h2>order for me 🍰</h2>
+        <p>Drag my favorite dessert onto the plate! muhehe</p>
+        <div class="dessert-grid">
+            <div class="dessert-card" draggable="true" id="mango">🥭 Mango Sticky Rice</div>
+            <div class="dessert-card" draggable="true" id="tiramisu">☕ Tiramisu</div>
+            <div class="dessert-card" draggable="true" id="lava">🍫 Choco Lava Cake</div>
+            <div class="dessert-card" draggable="true" id="pudding">🍮 Sticky Toffee Pudding</div>
+            <div class="dessert-card" draggable="true" id="pancakes">🥞 Date Pancakes</div>
+            <div class="dessert-card" draggable="true" id="rasmalai">🍨 Ras Malai</div>
+        </div>
+        <div id="plate">Drag dessert here 🍽️</div>
+    </div>
+    <div id="level-4" class="game-level">
+        <h2>congratulationsss waveeee </h2>
+        <img src="us.jpg" style="width: 280px; border: 15px solid white; border-radius: 20px;" onerror="this.src='https://via.placeholder.com/280/ffb5a7/ffffff?text=US'">
+        <h2 style="color: var(--strawberry);">you're my valentine!!</h2>
+        <button class="luxe-button" onclick="alert('Yay! ❤️ ilyy babeee mwah mwah mwah <33333')">yayyy!</button>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const sujata = [18.54014, 73.88345];
+        const soup = [18.53755, 73.87965];
+        let map;
+        function talkToFairy(choice) {
+            const speech = document.getElementById('fairy-speech');
+            const choicesDiv = document.getElementById('choices');
+            const startBtn = document.getElementById('final-start-btn');
+            if (choice === 'stranger') {
+                speech.innerText = "A traveler? *sniff sniff* You smell like someone looking for a Valentine...";
+                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">How did you know, kitty?</button>`;
+            } else if (choice === 'hero') {
+                speech.innerText = "A hero?! Well, you definitely look the part. But can you handle my trials?";
+                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">Test me, little one!</button>`;
+            } else if (choice === 'yes') {
+                speech.innerText = "Purr-fect! Prove your love through the trials... if you dare! ✨";
+                choicesDiv.style.display = 'none';
+                startBtn.style.display = 'block';
+            }
+        }
+        function nextLevel(lvl) {
+            document.querySelectorAll('.game-level').forEach(el => el.classList.remove('active-level'));
+            const target = document.getElementById('level-' + lvl);
+            if (target) target.classList.add('active-level');
+            if (lvl === 1) initMap();
+            if (lvl === 2) createChess();
+            if (lvl === 3) initDesserts();
+        }
+        function initMap() {
+            if (map) return;
+            map = L.map('map').setView(sujata, 16);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            const usIcon = L.divIcon({ className: 'custom-marker', html: '<img src="us.jpg" style="width:70px;height:70px;border-radius:50%;border:4px solid white;object-fit:cover;" onerror="this.src=\'https://via.placeholder.com/70/ffb5a7/ffffff?text=US\'">', iconSize: [70, 70] });
+            const marker = L.marker(sujata, { icon: usIcon, draggable: true }).addTo(map);
+            marker.on('dragend', function() {
+                if (marker.getLatLng().distanceTo(L.latLng(soup)) < 100) { alert("we made itt yummy yummy soup!! 🍓"); nextLevel(2); }
+            });
+            setTimeout(() => { map.invalidateSize(); }, 300);
+        }
+        function createChess() {
+            const board = document.getElementById('chess-board'); board.innerHTML = '';
+            const pieces = { 40: '♔', 41: '♟', 42: '♜', 1: '♝', 56: '♚', 53: '♖', 22: '♗', 15: '♙' };
+            const blackPieces = ['♝', '♜', '♟', '♚'];
+            let selectedIndex = null;
+            for (let i = 0; i < 64; i++) {
+                const sq = document.createElement('div');
+                sq.className = 'square ' + ((Math.floor(i/8) + i%8)%2===0 ? 'white-sq':'black-sq');
+                if (pieces[i]) sq.innerText = pieces[i];
+                sq.onclick = () => {
+                    if (selectedIndex === null) {
+                        if (blackPieces.includes(sq.innerText)) {
+                            selectedIndex = i;
+                            document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
+                            sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)'; 
+                        }
+                    } else {
+                        if (selectedIndex === 1 && i === 19) {
+                            sq.innerText = '♝';
+                            document.querySelectorAll('.square').forEach((s, idx) => { if (idx === selectedIndex) s.innerText = ''; });
+                            setTimeout(() => { alert("should've known my guy never misses 🫢"); nextLevel(3); }, 300);
+                        } else {
+                            alert("uh oh try again my almost-grandmaster");
+                            selectedIndex = null;
+                            document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
+                        }
+                    }
+                };
+                board.appendChild(sq);
+            }
+        }
+        function initDesserts() {
+            const plate = document.getElementById('plate');
+            document.querySelectorAll('.dessert-card').forEach(card => card.addEventListener('dragstart', (e) => e.dataTransfer.setData('text', e.target.id)));
+            plate.addEventListener('dragover', (e) => e.preventDefault());
+            plate.addEventListener('drop', (e) => {
+                const id = e.dataTransfer.getData('text');
+                if (id === 'tiramisu' || id === 'mango') { alert("smiling like an idiot now gold star⭐️"); nextLevel(4); }
+                else { alert("be so serious absolutely not"); }
+            });
+        }
+    </script>
+</body>
+</html>
