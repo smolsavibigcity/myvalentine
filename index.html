@@ -129,8 +129,13 @@
     board.innerHTML = '';
     
     // PIECE MAPPING: a3=40, b3=41, c3=42, b8=1, a1=56, f2=53, g6=22, h7=15
-    const pieces = { 40: '♔', 41: '♟', 42: '♜', 1: '♝', 56: '♚', 53: '♖', 22: '♗', 15: '♙' };
+    const pieces = { 
+        40: '♔', 41: '♟', 42: '♜', 1: '♝', 
+        56: '♚', 53: '♖', 22: '♗', 15: '♙' 
+    };
     
+    // Definining which pieces are "Black" and clickable
+    const blackPieces = ['♝', '♜', '♟', '♚'];
     let selectedIndex = null;
 
     for (let i = 0; i < 64; i++) {
@@ -142,16 +147,15 @@
 
         sq.onclick = () => {
             if (selectedIndex === null) {
-                // FIRST CLICK: Select a piece
-                if (sq.innerText !== '') {
+                // FIRST CLICK: Must be one of the black pieces you specified
+                if (blackPieces.includes(sq.innerText)) {
                     selectedIndex = i;
-                    // Highlight the selected square
                     document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
                     sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)'; 
                 }
             } else {
-                // SECOND CLICK: Try to move
-                // WINNING MOVE: Black Bishop (index 1) to d6 (index 19)
+                // SECOND CLICK: Attempting a move
+                // WINNING MOVE: Bishop (index 1) to d6 (index 19)
                 if (selectedIndex === 1 && i === 19) {
                     sq.innerText = '♝';
                     document.querySelectorAll('.square').forEach((s, idx) => {
@@ -162,10 +166,8 @@
                         nextLevel(3); 
                     }, 300);
                 } else {
-                    // WRONG MOVE: Show your custom alert
+                    // WRONG MOVE with a black piece
                     alert("uh oh try again my almost-grandmaster");
-                    
-                    // Reset selection so they have to try again
                     selectedIndex = null;
                     document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
                 }
@@ -174,7 +176,6 @@
         board.appendChild(sq);
     }
 }
-
         function initDesserts() {
             const cards = document.querySelectorAll('.dessert-card');
             const plate = document.getElementById('plate');
