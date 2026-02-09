@@ -115,13 +115,13 @@
             const choicesDiv = document.getElementById('choices');
             const startBtn = document.getElementById('final-start-btn');
             if (choice === 'stranger') {
-                speech.innerText = "Passing by? *sniff sniff* you smell like someone looking for a valentine...";
+                speech.innerText = "passing by? *sniff sniff* you smell like someone looking for a valentine...";
                 choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">omg how did u know?</button>`;
             } else if (choice === 'hero') {
-                speech.innerText = "Hmm..you do look promising *sniff sniff* you smell like someone looking for a valentine... ";
-                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">You're right! How did u know?</button>`;
+                speech.innerText = "hmm..you do look promising *sniff sniff* you smell like someone looking for a valentine... ";
+                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">you're right! how did u know?</button>`;
             } else if (choice === 'yes') {
-                speech.innerText = "I've seen that look before also... you seem nervous. Very well, three trials stand between you and your valentine. Good luck!";
+                speech.innerText = "i've seen that look before also... you seem nervous. very well, three trials stand between you and your valentine. good luck!";
                 choicesDiv.style.display = 'none';
                 startBtn.style.display = 'block';
             }
