@@ -10,30 +10,15 @@
         @import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Quicksand:wght@500&display=swap');
         :root { --matcha: #9fb8ad; --strawberry: #ffb5a7; --cream: #fdfaf6; }
         
-        /* MOVING GLITTER ANIMATION */
+        /* NEW: Continuous Glitter Background Effect */
         body { 
             background-color: var(--cream); 
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); /* Subtle glitter texture */
+            font-family: 'Quicksand', sans-serif; 
             margin: 0; 
             color: #6d597a; 
             text-align: center; 
             overflow-x: hidden; 
-            position: relative;
-        }
-
-        /* The Moving Sparkles Layer */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-            z-index: -1;
-            animation: moveGlitter 60s linear infinite;
-            opacity: 0.6;
-        }
-
-        @keyframes moveGlitter {
-            from { background-position: 0 0; }
-            to { background-position: 1000px 1000px; }
         }
         
         .game-level { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
@@ -41,13 +26,12 @@
         h2 { font-family: 'Gaegu', cursive; color: var(--matcha); font-size: 3rem; margin: 10px 0; }
         
         .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border-radius: 35px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
             padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            max-width: 90vw;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
         }
 
         #level-0 { 
@@ -62,9 +46,148 @@
 
         .speech-bubble { background: white; border-radius: 20px; padding: 15px; position: relative; color: #2D2424; font-weight: bold; max-width: 250px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-right: 180px; }
         .speech-bubble::after { content: ''; position: absolute; bottom: -10px; left: 20%; border-width: 10px 10px 0; border-style: solid; border-color: white transparent transparent; }
-        .mini-button { background: #ffb5a7; border: none; padding: 12px 25px; border-radius: 25px; color: white; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 10px rgba(255,181,167,0.3); }
-        .mini-button:hover { transform: scale(1.05); background: #ff9a8b; }
+        .mini-button { background: #ffb5a7; border: none; padding: 12px 25px; border-radius: 25px; color: white; cursor: pointer; font-weight: bold; transition: 0.3s; }
 
         #map { width: 100%; height: 400px; border: 8px solid white; border-radius: 20px; }
         .chess-container { width: 320px; height: 320px; display: grid; grid-template-columns: repeat(8, 1fr); border: 5px solid #6d597a; margin: 20px auto; }
-        .square { width: 40px; height: 40px; display: flex; align-items: center; justify-content
+        .square { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; }
+        .white-sq { background-color: #fdfaf6; } .black-sq { background-color: #9fb8ad; }
+        .dessert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .dessert-card { background: white; border: 2px solid var(--matcha); border-radius: 15px; padding: 15px; cursor: grab; font-weight: bold; }
+        #plate { width: 200px; height: 200px; border: 5px dashed var(--strawberry); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 30px; }
+        .code-input { padding: 15px; font-size: 2rem; border-radius: 15px; border: 3px solid var(--matcha); width: 140px; text-align: center; }
+        .luxe-button { background: var(--strawberry); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Gaegu', cursive; font-size: 1.8rem; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+    </style>
+</head>
+<body>
+
+    <div id="level-0" class="game-level active-level">
+        <div class="magic-container">
+            <h2>A Very Nom Quest</h2>
+            <div id="fairy-speech" class="speech-bubble">grr excuse me?? this is a private dinner. who are you? 🐾</div>
+            <div id="choices" style="display: flex; gap: 10px; margin-right: 180px;">
+                <button class="mini-button" onclick="talkToFairy('stranger')">just passing by</button>
+                <button class="mini-button" onclick="talkToFairy('hero')">a handsome hero!</button>
+            </div>
+            <button id="final-start-btn" class="luxe-button" style="display:none; margin-right: 180px;" onclick="nextLevel(1)">challenge accepted</button>
+        </div>
+    </div>
+
+    <div id="level-1" class="game-level"><div class="glass-panel"><h2>hungry hungry hippos 🦛🍵</h2><p>help us find our way to our seafood soup spot!</p><div id="map"></div></div></div>
+    <div id="level-2" class="game-level"><div class="glass-panel"><h2>my lil magnus carlsen 🍓</h2><p style="font-style: italic; color: #ffb5a7; font-weight: bold;">checkmate me if you can ;)</p><div id="chess-board" class="chess-container"></div><p>think like magnus not the meesho version hehe</p></div></div>
+    <div id="level-3" class="game-level"><div class="glass-panel"><h2>order for me 🍰</h2><p>Drag my favorite dessert onto the plate!</p><div class="dessert-grid"><div class="dessert-card" draggable="true" id="mango">🥭 Mango Sticky Rice</div><div class="dessert-card" draggable="true" id="tiramisu">☕ Tiramisu</div><div class="dessert-card" draggable="true" id="lava">🍫 Choco Lava Cake</div><div class="dessert-card" draggable="true" id="pudding">🍮 Sticky Toffee Pudding</div><div class="dessert-card" draggable="true" id="pancakes">🥞 Date Pancakes</div><div class="dessert-card" draggable="true" id="rasmalai">🍨 Ras Malai</div></div><div id="plate">Drag dessert here 🍽️</div></div></div>
+    <div id="level-4" class="game-level"><div class="glass-panel"><h2>unlock my heart 🔒💖</h2><p>enter the secret 4-digit code...</p> <input type="password" id="heartCode" class="code-input" maxlength="4" placeholder="****"><br><button class="luxe-button" onclick="checkCode()">Unlock</button></div></div>
+    <div id="level-5" class="game-level"><div class="glass-panel"><h2>congratulationsss waveeee </h2><img src="us.jpg" style="width: 250px; border: 10px solid white; border-radius: 20px;" onerror="this.src='https://via.placeholder.com/250/ffb5a7/ffffff?text=US'"><h2 style="color: var(--strawberry);">you're my valentine!!</h2><button class="luxe-button" onclick="triggerFinalWin()">yayyy!</button></div></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const sujata = [18.54014, 73.88345];
+        const soup = [18.53755, 73.87965];
+        let map;
+
+        function talkToFairy(choice) {
+            const speech = document.getElementById('fairy-speech');
+            const choicesDiv = document.getElementById('choices');
+            const startBtn = document.getElementById('final-start-btn');
+            if (choice === 'stranger') {
+                speech.innerText = "passing by? *sniff sniff* you smell like someone looking for a valentine...";
+                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">omg how did u know?</button>`;
+            } else if (choice === 'hero') {
+                speech.innerText = "hmm..you do look promising *sniff sniff* you smell like someone looking for a valentine... ";
+                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">you're right! how did u know?</button>`;
+            } else if (choice === 'yes') {
+                speech.innerText = "i've seen that look before... very well, four trials stand between you and your valentine. good luck!";
+                choicesDiv.style.display = 'none';
+                startBtn.style.display = 'block';
+            }
+        }
+
+        function nextLevel(lvl) {
+            document.querySelectorAll('.game-level').forEach(el => el.classList.remove('active-level'));
+            const target = document.getElementById('level-' + lvl);
+            if (target) target.classList.add('active-level');
+            if (lvl === 1) initMap();
+            if (lvl === 2) createChess();
+            if (lvl === 3) initDesserts();
+        }
+
+        function checkCode() {
+            if (document.getElementById('heartCode').value === "1506") {
+                alert("The lock clicks open... ❤️");
+                // TRIGGER: Confetti happens AFTER he clicks "OK"
+                confetti({ particleCount: 250, spread: 100, origin: { y: 0.6 } });
+                nextLevel(5);
+            } else { alert("uh oh... hint: everything in one"); }
+        }
+
+        function triggerFinalWin() {
+            alert('Yay! ❤️ ilyy babeee mwah mwah mwah <33333');
+            confetti({ particleCount: 400, spread: 150, origin: { y: 0.5 } });
+        }
+
+        function initMap() {
+            if (map) return;
+            map = L.map('map').setView(sujata, 16);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            const usIcon = L.divIcon({ className: 'custom-marker', html: '<img src="us.jpg" style="width:50px;height:50px;border-radius:50%;border:4px solid white;object-fit:cover;">', iconSize: [50, 50] });
+            const marker = L.marker(sujata, { icon: usIcon, draggable: true }).addTo(map);
+            marker.on('dragend', function() {
+                if (marker.getLatLng().distanceTo(L.latLng(soup)) < 100) { 
+                    alert("we made itt yummy yummy soup!! 🍓");
+                    confetti({ particleCount: 150, spread: 70 });
+                    nextLevel(2); 
+                }
+            });
+            setTimeout(() => { map.invalidateSize(); }, 300);
+        }
+
+        function createChess() {
+            const board = document.getElementById('chess-board'); board.innerHTML = '';
+            const pieces = { 40: '♔', 41: '♟', 42: '♜', 1: '♝', 56: '♚', 53: '♖', 22: '♗', 15: '♙' };
+            const blackPieces = ['♝', '♜', '♟', '♚'];
+            let selectedIndex = null;
+            for (let i = 0; i < 64; i++) {
+                const sq = document.createElement('div');
+                sq.className = 'square ' + ((Math.floor(i/8) + i%8)%2===0 ? 'white-sq':'black-sq');
+                if (pieces[i]) sq.innerText = pieces[i];
+                sq.onclick = () => {
+                    if (selectedIndex === null) {
+                        if (blackPieces.includes(sq.innerText)) {
+                            selectedIndex = i;
+                            document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
+                            sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)'; 
+                        }
+                    } else {
+                        if (selectedIndex === 1 && i === 19) {
+                            sq.innerText = '♝';
+                            document.querySelectorAll('.square').forEach((s, idx) => { if (idx === selectedIndex) s.innerText = ''; });
+                            alert("should've known my guy never misses 🫢");
+                            confetti({ particleCount: 150, spread: 80 });
+                            nextLevel(3);
+                        } else {
+                            alert("uh oh try again my almost-grandmaster");
+                            selectedIndex = null;
+                            document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
+                        }
+                    }
+                };
+                board.appendChild(sq);
+            }
+        }
+
+        function initDesserts() {
+            const plate = document.getElementById('plate');
+            document.querySelectorAll('.dessert-card').forEach(card => card.addEventListener('dragstart', (e) => e.dataTransfer.setData('text', e.target.id)));
+            plate.addEventListener('dragover', (e) => e.preventDefault());
+            plate.addEventListener('drop', (e) => {
+                const id = e.dataTransfer.getData('text');
+                if (id === 'tiramisu' || id === 'mango') { 
+                    alert("smiling like an idiot now gold star⭐️"); 
+                    confetti({ particleCount: 200, spread: 90 });
+                    nextLevel(4); 
+                } else { alert("be so serious absolutely not"); }
+            });
+        }
+    </script>
+</body>
+</html>
