@@ -131,7 +131,6 @@
     // PIECE MAPPING: a3=40, b3=41, c3=42, b8=1, a1=56, f2=53, g6=22, h7=15
     const pieces = { 40: '♔', 41: '♟', 42: '♜', 1: '♝', 56: '♚', 53: '♖', 22: '♗', 15: '♙' };
     
-    // Track what is currently selected
     let selectedIndex = null;
 
     for (let i = 0; i < 64; i++) {
@@ -141,25 +140,20 @@
         sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
         if (pieces[i]) sq.innerText = pieces[i];
 
-        // EVERY SQUARE is now clickable
         sq.onclick = () => {
-            // Remove previous highlight
-            document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
-
             if (selectedIndex === null) {
-                // FIRST CLICK: If they clicked a piece, "select" it
+                // FIRST CLICK: Select a piece
                 if (sq.innerText !== '') {
                     selectedIndex = i;
-                    sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)'; // Highlight selection
+                    // Highlight the selected square
+                    document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
+                    sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)'; 
                 }
             } else {
-                // SECOND CLICK: They are trying to move the selected piece
-                const movingPiece = pieces[selectedIndex];
-
-                // WIN CONDITION: Was it the Black Bishop (index 1) moving to d6 (index 19)?
+                // SECOND CLICK: Try to move
+                // WINNING MOVE: Black Bishop (index 1) to d6 (index 19)
                 if (selectedIndex === 1 && i === 19) {
                     sq.innerText = '♝';
-                    // Find the old Bishop and clear it
                     document.querySelectorAll('.square').forEach((s, idx) => {
                         if (idx === selectedIndex) s.innerText = '';
                     });
@@ -168,8 +162,12 @@
                         nextLevel(3); 
                     }, 300);
                 } else {
-                    // WRONG MOVE: Deselect and let them try again
+                    // WRONG MOVE: Show your custom alert
+                    alert("uh oh try again my almost-grandmaster");
+                    
+                    // Reset selection so they have to try again
                     selectedIndex = null;
+                    document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
                 }
             }
         };
