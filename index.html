@@ -125,32 +125,57 @@
         }
 
         function createChess() {
-            const board = document.getElementById('chess-board');
-            board.innerHTML = '';
-            const pieces = { 40: '♔', 41: '♟', 42: '♜', 1: '♝', 56: '♚', 53: '♖', 22: '♗', 15: '♙' };
-            window.bishopSelected = false;
+    const board = document.getElementById('chess-board');
+    board.innerHTML = '';
+    
+    // PIECE MAPPING: a3=40, b3=41, c3=42, b8=1, a1=56, f2=53, g6=22, h7=15
+    const pieces = { 40: '♔', 41: '♟', 42: '♜', 1: '♝', 56: '♚', 53: '♖', 22: '♗', 15: '♙' };
+    
+    // Track what is currently selected
+    let selectedIndex = null;
 
-            for (let i = 0; i < 64; i++) {
-                const row = Math.floor(i / 8); const col = i % 8;
-                const sq = document.createElement('div');
-                sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
-                if (pieces[i]) sq.innerText = pieces[i];
+    for (let i = 0; i < 64; i++) {
+        const row = Math.floor(i / 8);
+        const col = i % 8;
+        const sq = document.createElement('div');
+        sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
+        if (pieces[i]) sq.innerText = pieces[i];
 
-                sq.onclick = () => {
-                    if (window.bishopSelected) {
-                        if (i === 19) { // d6 move
-                            sq.innerText = '♝';
-                            document.querySelectorAll('.square').forEach(s => { if(s.innerText === '♝' && s !== sq) s.innerText = ''; });
-                            setTimeout(() => { alert("look at u checkmating me 🤭 should've known my guy never misses"); nextLevel(3); }, 300);
-                        } else { window.bishopSelected = false; }
-                    } else if (sq.innerText === '♝') {
-                        window.bishopSelected = true;
-                        sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)';
-                    }
-                };
-                board.appendChild(sq);
+        // EVERY SQUARE is now clickable
+        sq.onclick = () => {
+            // Remove previous highlight
+            document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
+
+            if (selectedIndex === null) {
+                // FIRST CLICK: If they clicked a piece, "select" it
+                if (sq.innerText !== '') {
+                    selectedIndex = i;
+                    sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)'; // Highlight selection
+                }
+            } else {
+                // SECOND CLICK: They are trying to move the selected piece
+                const movingPiece = pieces[selectedIndex];
+
+                // WIN CONDITION: Was it the Black Bishop (index 1) moving to d6 (index 19)?
+                if (selectedIndex === 1 && i === 19) {
+                    sq.innerText = '♝';
+                    // Find the old Bishop and clear it
+                    document.querySelectorAll('.square').forEach((s, idx) => {
+                        if (idx === selectedIndex) s.innerText = '';
+                    });
+                    setTimeout(() => { 
+                        alert("Discovered Checkmate! 🍓"); 
+                        nextLevel(3); 
+                    }, 300);
+                } else {
+                    // WRONG MOVE: Deselect and let them try again
+                    selectedIndex = null;
+                }
             }
-        }
+        };
+        board.appendChild(sq);
+    }
+}
 
         function initDesserts() {
             const cards = document.querySelectorAll('.dessert-card');
