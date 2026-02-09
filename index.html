@@ -15,72 +15,47 @@
 
         h2 { font-family: 'Gaegu', cursive; color: var(--matcha); font-size: 3rem; margin: 10px 0; }
         
-        /* NEW: Wizard Intro Animations */
-        @keyframes glow {
-            0% { text-shadow: 0 0 10px rgba(255, 253, 116, 0.4); }
-            50% { text-shadow: 0 0 30px rgba(255, 253, 116, 0.8); }
-            100% { text-shadow: 0 0 10px rgba(255, 253, 116, 0.4); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-        }
-
-        /* UPDATED: Animating high up to avoid the faces */
+        /* --- LEVEL 0: WIZARD/FAIRY PAGE STYLES --- */
         #level-0 { 
             background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('wizard-bg.jpg');
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start; /* Keeps text at the top */
-            padding-top: 5vh;            /* Initial spacing from top */
+            justify-content: flex-start; 
+            padding-top: 5vh;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); } /* Gentle up/down movement */
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        @keyframes glow { 0% { text-shadow: 0 0 10px #FFFD74; } 50% { text-shadow: 0 0 30px #FFFD74; } 100% { text-shadow: 0 0 10px #FFFD74; } }
+
+        .magic-container { animation: float 4s ease-in-out infinite; display: flex; flex-direction: column; align-items: center; }
+        #level-0 h2 { color: #FFFD74; animation: glow 3s ease-in-out infinite; font-size: 4rem; text-shadow: 2px 2px 15px rgba(0,0,0,0.8); }
+
+        .fairy-container { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
+        .fairy-img { width: 80px; }
+        .speech-bubble { 
+            background: white; border-radius: 20px; padding: 15px; position: relative; 
+            color: #2D2424; font-weight: bold; max-width: 250px; margin-bottom: 10px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+        }
+        .speech-bubble::after { 
+            content: ''; position: absolute; bottom: -10px; left: 50%; 
+            border-width: 10px 10px 0; border-style: solid; border-color: white transparent transparent; 
+            transform: translateX(-50%); 
         }
 
-        .magic-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: float 4s ease-in-out infinite; /* Brings back the float! */
-            text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.8);
-        }
+        .choice-buttons { display: flex; gap: 10px; margin-top: 10px; }
+        .mini-button { background: #ffb5a7; border: none; padding: 10px 20px; border-radius: 20px; color: white; cursor: pointer; font-weight: bold; }
 
-        #level-0 h2 { 
-            color: #FFFD74; 
-            font-size: 4rem; 
-            margin-bottom: 10px;
-            animation: glow 3s ease-in-out infinite; /* Your title glow */
-        }
-
-        #level-0 p {
-            color: #FFFD74;
-            font-size: 1.4rem;
-            font-weight: bold;
-            max-width: 85%;
-        }
-        /* Map Styling - Fixed width from 5000px to 90vw */
+        /* --- OTHER GAME STYLES --- */
         #map { width: 90vw; max-width: 600px; height: 500px; border: 12px solid white; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: #eee; outline: 2px solid #ffb5a7; }
-
-        /* Chess Styling */
         .chess-container { width: 360px; height: 360px; display: grid; grid-template-columns: repeat(8, 1fr); border: 10px solid #6d597a; margin: 20px auto; }
         .square { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 35px; cursor: pointer; }
         .white-sq { background-color: #fdfaf6; }
         .black-sq { background-color: #9fb8ad; }
-
-        /* Dessert Styling */
         .dessert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
-        .dessert-card { background: white; border: 3px solid var(--matcha); border-radius: 15px; padding: 15px; cursor: grab; width: 130px; font-weight: bold; font-size: 0.9rem; color: #6d597a; }
+        .dessert-card { background: white; border: 3px solid var(--matcha); border-radius: 15px; padding: 15px; cursor: grab; width: 130px; font-weight: bold; font-size: 0.9rem; }
         #plate { width: 220px; height: 220px; border: 5px dashed var(--strawberry); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--strawberry); font-weight: bold; margin-top: 40px; background: rgba(255,255,255,0.5); }
-
-        .luxe-button { background: var(--strawberry); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Gaegu', cursive; font-size: 1.8rem; cursor: pointer; margin-top: 20px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .luxe-button { background: var(--strawberry); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Gaegu', cursive; font-size: 1.8rem; cursor: pointer; margin-top: 20px; transition: 0.3s; }
     </style>
 </head>
 <body>
@@ -88,13 +63,20 @@
     <div id="level-0" class="game-level active-level">
         <div class="magic-container">
             <h2>A Very Nom Quest</h2>
-            <p style="font-size: 1.6rem; font-weight: bold;">Three trials stand between you and something sweet...</p>
-            <button class="luxe-button" onclick="nextLevel(1)">challenge accepted</button>
+            <div class="fairy-container">
+                <div id="fairy-speech" class="speech-bubble">Halt! Who goes there? ✨</div>
+                <img src="https://cdn-icons-png.flaticon.com/512/2121/2121078.png" class="fairy-img" alt="Fairy">
+            </div>
+            <div id="choices" class="choice-buttons">
+                <button class="mini-button" onclick="talkToFairy('stranger')">Just a traveler...</button>
+                <button class="mini-button" onclick="talkToFairy('hero')">A handsome hero!</button>
+            </div>
+            <button id="final-start-btn" class="luxe-button" style="display:none;" onclick="nextLevel(1)">challenge accepted</button>
         </div>
     </div>
 
     <div id="level-1" class="game-level">
-        <h2>hungry hungry hippos 🦛 (a very nom quest) 🍵</h2>
+        <h2>hungry hungry hippos 🦛🍵</h2>
         <p>help us find our way to our seafood soup spot!</p>
         <div id="map"></div>
     </div>
@@ -124,7 +106,7 @@
         <h2>congratulationsss waveeee </h2>
         <img src="us.jpg" style="width: 280px; border: 15px solid white; border-radius: 20px;" onerror="this.src='https://via.placeholder.com/280/ffb5a7/ffffff?text=US'">
         <h2 style="color: var(--strawberry);">you're my valentine!!</h2>
-        <button class="luxe-button" onclick="alert('Yay! ❤️ ilyy babeee my shweetest lil cutest boyyyy mwah mwah mwah <33333 i miss u i miss u i miss uuuu')">yayyy!</button>
+        <button class="luxe-button" onclick="alert('Yay! ❤️ ilyy babeee mwah mwah mwah <33333')">yayyy!</button>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -132,6 +114,24 @@
         const sujata = [18.54014, 73.88345];
         const soup = [18.53755, 73.87965];
         let map;
+
+        function talkToFairy(choice) {
+            const speech = document.getElementById('fairy-speech');
+            const choicesDiv = document.getElementById('choices');
+            const startBtn = document.getElementById('final-start-btn');
+
+            if (choice === 'stranger') {
+                speech.innerText = "A traveler? Hmm... you look like you're searching for something sweet.";
+                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">How did you know?</button>`;
+            } else if (choice === 'hero') {
+                speech.innerText = "A hero? You certainly have the jawline for it! But do you have the brains?";
+                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">Test me, Fairy!</button>`;
+            } else if (choice === 'yes') {
+                speech.innerText = "Very well! Prove your worth through the three trials... if you dare!";
+                choicesDiv.style.display = 'none';
+                startBtn.style.display = 'block';
+            }
+        }
 
         function nextLevel(lvl) {
             document.querySelectorAll('.game-level').forEach(el => el.classList.remove('active-level'));
@@ -146,32 +146,22 @@
             if (map) return;
             map = L.map('map').setView(sujata, 16);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            const usIcon = L.divIcon({
-                className: 'custom-marker',
-                html: '<img src="us.jpg" style="width:70px;height:70px;border-radius:50%;border:4px solid white;object-fit:cover;" onerror="this.src=\'https://via.placeholder.com/70/ffb5a7/ffffff?text=US\'">',
-                iconSize: [70, 70]
-            });
+            const usIcon = L.divIcon({ className: 'custom-marker', html: '<img src="us.jpg" style="width:70px;height:70px;border-radius:50%;border:4px solid white;object-fit:cover;" onerror="this.src=\'https://via.placeholder.com/70/ffb5a7/ffffff?text=US\'">', iconSize: [70, 70] });
             const marker = L.marker(sujata, { icon: usIcon, draggable: true }).addTo(map);
             marker.on('dragend', function() {
-                if (marker.getLatLng().distanceTo(L.latLng(soup)) < 200) {
-                    alert("we made itt yummy yummy soup!! 🍓");
-                    nextLevel(2);
-                }
+                if (marker.getLatLng().distanceTo(L.latLng(soup)) < 100) { alert("we made itt yummy yummy soup!! 🍓"); nextLevel(2); }
             });
-            setTimeout(() => { map.invalidateSize(); }, 200);
+            setTimeout(() => { map.invalidateSize(); }, 300);
         }
 
         function createChess() {
-            const board = document.getElementById('chess-board');
-            board.innerHTML = '';
+            const board = document.getElementById('chess-board'); board.innerHTML = '';
             const pieces = { 40: '♔', 41: '♟', 42: '♜', 1: '♝', 56: '♚', 53: '♖', 22: '♗', 15: '♙' };
             const blackPieces = ['♝', '♜', '♟', '♚'];
             let selectedIndex = null;
-
             for (let i = 0; i < 64; i++) {
-                const row = Math.floor(i / 8); const col = i % 8;
                 const sq = document.createElement('div');
-                sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
+                sq.className = 'square ' + ((Math.floor(i/8) + i%8)%2===0 ? 'white-sq':'black-sq');
                 if (pieces[i]) sq.innerText = pieces[i];
                 sq.onclick = () => {
                     if (selectedIndex === null) {
@@ -184,7 +174,7 @@
                         if (selectedIndex === 1 && i === 19) {
                             sq.innerText = '♝';
                             document.querySelectorAll('.square').forEach((s, idx) => { if (idx === selectedIndex) s.innerText = ''; });
-                            setTimeout(() => { alert("look at you checkmating me 🫢 should've known my guy never misses"); nextLevel(3); }, 300);
+                            setTimeout(() => { alert("should've known my guy never misses 🫢"); nextLevel(3); }, 300);
                         } else {
                             alert("uh oh try again my almost-grandmaster");
                             selectedIndex = null;
@@ -197,16 +187,13 @@
         }
 
         function initDesserts() {
-            const cards = document.querySelectorAll('.dessert-card');
             const plate = document.getElementById('plate');
-            cards.forEach(card => card.addEventListener('dragstart', (e) => e.dataTransfer.setData('text', e.target.id)));
+            document.querySelectorAll('.dessert-card').forEach(card => card.addEventListener('dragstart', (e) => e.dataTransfer.setData('text', e.target.id)));
             plate.addEventListener('dragover', (e) => e.preventDefault());
             plate.addEventListener('drop', (e) => {
                 const id = e.dataTransfer.getData('text');
-                if (id === 'tiramisu' || id === 'mango') {
-                    alert("YUP. gold star⭐️ im smiling like an idiot now");
-                    nextLevel(4);
-                } else { alert("be so serious absolutely not"); }
+                if (id === 'tiramisu' || id === 'mango') { alert("smiling like an idiot now gold star⭐️"); nextLevel(4); }
+                else { alert("be so serious absolutely not"); }
             });
         }
     </script>
