@@ -8,26 +8,38 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Quicksand:wght@500&display=swap');
         :root { --matcha: #9fb8ad; --strawberry: #ffb5a7; --cream: #fdfaf6; }
-        body { background-color: var(--cream); font-family: 'Quicksand', sans-serif; margin: 0; color: #6d597a; text-align: center; }
+        body { background-color: var(--cream); font-family: 'Quicksand', sans-serif; margin: 0; color: #6d597a; text-align: center; overflow-x: hidden; }
         
-        /* THE FIX: We use a more reliable way to hide/show */
         .game-level { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
         .active-level { display: flex !important; }
 
         h2 { font-family: 'Gaegu', cursive; color: var(--matcha); font-size: 3rem; margin: 10px 0; }
         
-        /* Intro Styling */
-       /* UPDATED: Custom Wizard Background */
-#level-0 { 
-    background-image: url('wizard-bg.jpg'); /* Your uploaded file name */
-    background-size: cover;                /* Fills the whole screen */
-    background-position: center;           /* Centers the image */
-    background-repeat: no-repeat;          /* Prevents tiling */
-    color: #f0e68c;                        /* Keeps your Butter Yellow text */
-}
+        /* NEW: Wizard Intro Animations */
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px rgba(255, 253, 116, 0.4); }
+            50% { text-shadow: 0 0 30px rgba(255, 253, 116, 0.8); }
+            100% { text-shadow: 0 0 10px rgba(255, 253, 116, 0.4); }
+        }
 
-        /* Map Styling */
-        #map { width: 5000px; height: 500px; border: 12px solid white; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: #eee; outline: 2px solid #ffb5a7; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        #level-0 { 
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('wizard-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #FFFD74; 
+        }
+
+        .magic-container { animation: float 4s ease-in-out infinite; }
+        #level-0 h2 { color: #FFFD74; animation: glow 3s ease-in-out infinite; font-size: 4.5rem; }
+
+        /* Map Styling - Fixed width from 5000px to 90vw */
+        #map { width: 90vw; max-width: 600px; height: 500px; border: 12px solid white; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: #eee; outline: 2px solid #ffb5a7; }
 
         /* Chess Styling */
         .chess-container { width: 360px; height: 360px; display: grid; grid-template-columns: repeat(8, 1fr); border: 10px solid #6d597a; margin: 20px auto; }
@@ -37,25 +49,20 @@
 
         /* Dessert Styling */
         .dessert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
-        .dessert-card { background: white; border: 3px solid var(--matcha); border-radius: 15px; padding: 15px; cursor: grab; width: 130px; font-weight: bold; font-size: 0.9rem; }
+        .dessert-card { background: white; border: 3px solid var(--matcha); border-radius: 15px; padding: 15px; cursor: grab; width: 130px; font-weight: bold; font-size: 0.9rem; color: #6d597a; }
         #plate { width: 220px; height: 220px; border: 5px dashed var(--strawberry); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--strawberry); font-weight: bold; margin-top: 40px; background: rgba(255,255,255,0.5); }
 
-        .luxe-button { background: var(--strawberry); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Gaegu', cursive; font-size: 1.8rem; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .luxe-button { background: var(--strawberry); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Gaegu', cursive; font-size: 1.8rem; cursor: pointer; margin-top: 20px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
 
-    <div id="level-0" class="game-level active-level" style="background-color: #1a1a2e; color: #f0e68c;">
-        <div style="position: relative; margin-bottom: 20px;">
-            <img src="wizard-den.jpg" 
-                 style="width: 400px; max-width: 90vw; border: 5px solid #4a4e69; border-radius: 15px; box-shadow: 0 0 30px rgba(138, 43, 226, 0.4);" 
-                 onerror="this.src='https://via.placeholder.com/400x300/1a1a2e/f0e68c?text=A+Cozy+Wizard+Den'">
+    <div id="level-0" class="game-level active-level">
+        <div class="magic-container">
+            <h2>A Very Nom Quest</h2>
+            <p style="font-size: 1.6rem; font-weight: bold;">"Three trials stand between you and something sweet..."</p>
+            <button class="luxe-button" onclick="nextLevel(1)">challenge accepted</button>
         </div>
-        
-        <h2 style="color: #f0e68c; font-family: 'Gaegu', cursive; font-size: 3.5rem; text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">A Very Nom Quest</h2>
-        <p style="font-size: 1.4rem; font-style: italic; margin: 10px 0;">"Three trials stand between you and something sweet..."</p>
-        
-        <button class="luxe-button" onclick="nextLevel(1)" style="background-color: #ffb5a7; margin-top: 30px;">challenge accepted</button>
     </div>
 
     <div id="level-1" class="game-level">
@@ -79,8 +86,8 @@
             <div class="dessert-card" draggable="true" id="tiramisu">☕ Tiramisu</div>
             <div class="dessert-card" draggable="true" id="lava">🍫 Choco Lava Cake</div>
             <div class="dessert-card" draggable="true" id="pudding">🍮 Sticky Toffee Pudding</div>
-            <div class="dessert-card" draggable="true" id="icecream">🍦 Cookies & Cream</div>
             <div class="dessert-card" draggable="true" id="pancakes">🥞 Date Pancakes</div>
+            <div class="dessert-card" draggable="true" id="rasmalai">🍨 Ras Malai</div>
         </div>
         <div id="plate">Drag dessert here 🍽️</div>
     </div>
@@ -99,18 +106,9 @@
         let map;
 
         function nextLevel(lvl) {
-            // 1. Hide every single level by removing the active class
-            document.querySelectorAll('.game-level').forEach(el => {
-                el.classList.remove('active-level');
-            });
-
-            // 2. Show the target level
+            document.querySelectorAll('.game-level').forEach(el => el.classList.remove('active-level'));
             const target = document.getElementById('level-' + lvl);
-            if (target) {
-                target.classList.add('active-level');
-            }
-
-            // 3. Run specific setup for that level
+            if (target) target.classList.add('active-level');
             if (lvl === 1) initMap();
             if (lvl === 2) createChess();
             if (lvl === 3) initDesserts();
@@ -132,62 +130,44 @@
                     nextLevel(2);
                 }
             });
-            // Give the map a moment to realize it's now visible
             setTimeout(() => { map.invalidateSize(); }, 200);
         }
 
         function createChess() {
-    const board = document.getElementById('chess-board');
-    board.innerHTML = '';
-    
-    // PIECE MAPPING: a3=40, b3=41, c3=42, b8=1, a1=56, f2=53, g6=22, h7=15
-    const pieces = { 
-        40: '♔', 41: '♟', 42: '♜', 1: '♝', 
-        56: '♚', 53: '♖', 22: '♗', 15: '♙' 
-    };
-    
-    // Definining which pieces are "Black" and clickable
-    const blackPieces = ['♝', '♜', '♟', '♚'];
-    let selectedIndex = null;
+            const board = document.getElementById('chess-board');
+            board.innerHTML = '';
+            const pieces = { 40: '♔', 41: '♟', 42: '♜', 1: '♝', 56: '♚', 53: '♖', 22: '♗', 15: '♙' };
+            const blackPieces = ['♝', '♜', '♟', '♚'];
+            let selectedIndex = null;
 
-    for (let i = 0; i < 64; i++) {
-        const row = Math.floor(i / 8);
-        const col = i % 8;
-        const sq = document.createElement('div');
-        sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
-        if (pieces[i]) sq.innerText = pieces[i];
-
-        sq.onclick = () => {
-            if (selectedIndex === null) {
-                // FIRST CLICK: Must be one of the black pieces you specified
-                if (blackPieces.includes(sq.innerText)) {
-                    selectedIndex = i;
-                    document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
-                    sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)'; 
-                }
-            } else {
-                // SECOND CLICK: Attempting a move
-                // WINNING MOVE: Bishop (index 1) to d6 (index 19)
-                if (selectedIndex === 1 && i === 19) {
-                    sq.innerText = '♝';
-                    document.querySelectorAll('.square').forEach((s, idx) => {
-                        if (idx === selectedIndex) s.innerText = '';
-                    });
-                    setTimeout(() => { 
-                        alert("look at you checkmating me 🫢 should've known my guy never misses"); 
-                        nextLevel(3); 
-                    }, 300);
-                } else {
-                    // WRONG MOVE with a black piece
-                    alert("uh oh try again my almost-grandmaster");
-                    selectedIndex = null;
-                    document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
-                }
+            for (let i = 0; i < 64; i++) {
+                const row = Math.floor(i / 8); const col = i % 8;
+                const sq = document.createElement('div');
+                sq.className = 'square ' + ((row + col) % 2 === 0 ? 'white-sq' : 'black-sq');
+                if (pieces[i]) sq.innerText = pieces[i];
+                sq.onclick = () => {
+                    if (selectedIndex === null) {
+                        if (blackPieces.includes(sq.innerText)) {
+                            selectedIndex = i;
+                            document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
+                            sq.style.backgroundColor = 'rgba(255, 181, 167, 0.7)'; 
+                        }
+                    } else {
+                        if (selectedIndex === 1 && i === 19) {
+                            sq.innerText = '♝';
+                            document.querySelectorAll('.square').forEach((s, idx) => { if (idx === selectedIndex) s.innerText = ''; });
+                            setTimeout(() => { alert("look at you checkmating me 🫢 should've known my guy never misses"); nextLevel(3); }, 300);
+                        } else {
+                            alert("uh oh try again my almost-grandmaster");
+                            selectedIndex = null;
+                            document.querySelectorAll('.square').forEach(s => s.style.backgroundColor = '');
+                        }
+                    }
+                };
+                board.appendChild(sq);
             }
-        };
-        board.appendChild(sq);
-    }
-}
+        }
+
         function initDesserts() {
             const cards = document.querySelectorAll('.dessert-card');
             const plate = document.getElementById('plate');
