@@ -15,39 +15,36 @@
 
         h2 { font-family: 'Gaegu', cursive; color: var(--matcha); font-size: 3rem; margin: 10px 0; }
         
-        /* LEVEL 0: TOP-ALIGNED CAT INTRO */
+        /* LEVEL 0: TRAMP DIALOGUE POSITIONING */
         #level-0 { 
-            background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('wizard-bg.jpg');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('wizard-bg.jpg');
             background-size: cover;
             background-position: center;
             justify-content: flex-start; 
-            padding-top: 5vh;
+            padding-top: 12vh; 
         }
 
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
         @keyframes glow { 0% { text-shadow: 0 0 10px #FFFD74; } 50% { text-shadow: 0 0 30px #FFFD74; } 100% { text-shadow: 0 0 10px #FFFD74; } }
 
-        .magic-container { animation: float 4s ease-in-out infinite; display: flex; flex-direction: column; align-items: center; }
+        .magic-container { animation: float 4s ease-in-out infinite; display: flex; flex-direction: column; align-items: center; width: 100%; }
         #level-0 h2 { color: #FFFD74; animation: glow 3s ease-in-out infinite; font-size: 4rem; text-shadow: 2px 2px 15px rgba(0,0,0,0.8); }
 
-        .cat-container { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
-        .cat-img { width: 120px; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5)); }
-        
         .speech-bubble { 
             background: white; border-radius: 20px; padding: 15px; position: relative; 
-            color: #2D2424; font-weight: bold; max-width: 250px; margin-bottom: 10px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+            color: #2D2424; font-weight: bold; max-width: 250px; margin-bottom: 20px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-right: 180px; /* Positions bubble over the dog on the left */
         }
         .speech-bubble::after { 
-            content: ''; position: absolute; bottom: -10px; left: 50%; 
+            content: ''; position: absolute; bottom: -10px; left: 20%; 
             border-width: 10px 10px 0; border-style: solid; border-color: white transparent transparent; 
-            transform: translateX(-50%); 
         }
 
-        .choice-buttons { display: flex; gap: 10px; margin-top: 10px; }
+        .choice-buttons { display: flex; gap: 10px; margin-top: 10px; margin-right: 180px; }
         .mini-button { background: #ffb5a7; border: none; padding: 10px 20px; border-radius: 20px; color: white; cursor: pointer; font-weight: bold; }
 
-        /* OTHER GAME STYLES */
+        /* OTHER LEVELS */
         #map { width: 90vw; max-width: 600px; height: 500px; border: 12px solid white; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: #eee; outline: 2px solid #ffb5a7; }
         .chess-container { width: 360px; height: 360px; display: grid; grid-template-columns: repeat(8, 1fr); border: 10px solid #6d597a; margin: 20px auto; }
         .square { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 35px; cursor: pointer; }
@@ -64,15 +61,12 @@
     <div id="level-0" class="game-level active-level">
         <div class="magic-container">
             <h2>A Very Nom Quest</h2>
-            <div class="cat-container">
-                <div id="fairy-speech" class="speech-bubble">Mew! Halt right there! Who goes there? 🐾</div>
-                <img src="https://cdn-icons-png.flaticon.com/512/616/616430.png" class="cat-img" alt="Cat Narrator">
-            </div>
+            <div id="fairy-speech" class="speech-bubble">Woof! Halt right there! Who goes there? 🐾</div>
             <div id="choices" class="choice-buttons">
                 <button class="mini-button" onclick="talkToFairy('stranger')">Just a traveler...</button>
                 <button class="mini-button" onclick="talkToFairy('hero')">A handsome hero!</button>
             </div>
-            <button id="final-start-btn" class="luxe-button" style="display:none;" onclick="nextLevel(1)">challenge accepted</button>
+            <button id="final-start-btn" class="luxe-button" style="display:none; margin-right: 180px;" onclick="nextLevel(1)">challenge accepted</button>
         </div>
     </div>
 
@@ -122,10 +116,10 @@
             const startBtn = document.getElementById('final-start-btn');
             if (choice === 'stranger') {
                 speech.innerText = "A traveler? *sniff sniff* You smell like someone looking for a Valentine...";
-                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">How did you know, kitty?</button>`;
+                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">How did you know, boy?</button>`;
             } else if (choice === 'hero') {
                 speech.innerText = "A hero?! Well, you definitely look the part. But can you handle my trials?";
-                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">Test me, little one!</button>`;
+                choicesDiv.innerHTML = `<button class="mini-button" onclick="talkToFairy('yes')">Test me, Tramp!</button>`;
             } else if (choice === 'yes') {
                 speech.innerText = "Purr-fect! Prove your love through the trials... if you dare! ✨";
                 choicesDiv.style.display = 'none';
