@@ -34,7 +34,7 @@
             background: white; border-radius: 20px; padding: 15px; position: relative; 
             color: #2D2424; font-weight: bold; max-width: 250px; margin-bottom: 20px; 
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            margin-right: 180px; /* Positions bubble over the dog on the left */
+            margin-right: 180px;
         }
         .speech-bubble::after { 
             content: ''; position: absolute; bottom: -10px; left: 20%; 
@@ -43,6 +43,10 @@
 
         .choice-buttons { display: flex; gap: 10px; margin-top: 10px; margin-right: 180px; }
         .mini-button { background: #ffb5a7; border: none; padding: 10px 20px; border-radius: 20px; color: white; cursor: pointer; font-weight: bold; }
+
+        /* HEART LOCK STYLING */
+        .lock-container { font-size: 5rem; margin: 20px; filter: drop-shadow(0 0 10px var(--strawberry)); }
+        .code-input { padding: 10px; font-size: 2rem; border-radius: 15px; border: 3px solid var(--matcha); width: 150px; text-align: center; font-family: 'Quicksand', sans-serif; color: #6d597a; }
 
         /* OTHER LEVELS */
         #map { width: 90vw; max-width: 600px; height: 500px; border: 12px solid white; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: #eee; outline: 2px solid #ffb5a7; }
@@ -98,6 +102,15 @@
     </div>
 
     <div id="level-4" class="game-level">
+        <h2>unlock my heart 🔒💖</h2>
+        <p>enter the secret 4-digit code...</p>
+        <div class="lock-container">❤️</div>
+        <input type="number" id="heartCode" class="code-input" placeholder="0000">
+        <br>
+        <button class="luxe-button" onclick="checkCode()">Unlock</button>
+    </div>
+
+    <div id="level-5" class="game-level">
         <h2>congratulationsss waveeee </h2>
         <img src="us.jpg" style="width: 280px; border: 15px solid white; border-radius: 20px;" onerror="this.src='https://via.placeholder.com/280/ffb5a7/ffffff?text=US'">
         <h2 style="color: var(--strawberry);">you're my valentine!!</h2>
@@ -134,6 +147,16 @@
             if (lvl === 1) initMap();
             if (lvl === 2) createChess();
             if (lvl === 3) initDesserts();
+        }
+
+        function checkCode() {
+            const input = document.getElementById('heartCode').value;
+            if (input === "1506") {
+                alert("The lock clicks open... ❤️");
+                nextLevel(5);
+            } else {
+                alert("uh oh... hint: everything in one");
+            }
         }
 
         function initMap() {
@@ -186,7 +209,10 @@
             plate.addEventListener('dragover', (e) => e.preventDefault());
             plate.addEventListener('drop', (e) => {
                 const id = e.dataTransfer.getData('text');
-                if (id === 'tiramisu' || id === 'mango') { alert("smiling like an idiot now gold star⭐️"); nextLevel(4); }
+                if (id === 'tiramisu' || id === 'mango') { 
+                    alert("smiling like an idiot now gold star⭐️"); 
+                    nextLevel(4); 
+                }
                 else { alert("be so serious absolutely not"); }
             });
         }
