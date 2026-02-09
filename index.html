@@ -117,7 +117,7 @@
                 // TRIGGER: Confetti happens AFTER he clicks "OK"
                 confetti({ particleCount: 250, spread: 100, origin: { y: 0.6 } });
                 nextLevel(5);
-            } else { alert("uh oh... hint: everything in one"); }
+            } else { alert("no stupid! hint: everything in one"); }
         }
 
         function triggerFinalWin() {
@@ -182,7 +182,7 @@
             plate.addEventListener('drop', (e) => {
                 const id = e.dataTransfer.getData('text');
                 if (id === 'tiramisu' || id === 'mango') { 
-                    alert("smiling like an idiot now gold star⭐️"); 
+                    alert("YUP gold star ⭐️ "); 
                     confetti({ particleCount: 200, spread: 90 });
                     nextLevel(4); 
                 } else { alert("be so serious absolutely not"); }
