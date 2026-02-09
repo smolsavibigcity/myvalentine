@@ -227,4 +227,13 @@
             plate.addEventListener('drop', (e) => {
                 const id = e.dataTransfer.getData('text');
                 if (id === 'tiramisu' || id === 'mango') { 
-                    confetti({
+                    confetti({ particleCount: 100, spread: 80 });
+                    alert("smiling like an idiot now gold star⭐️"); 
+                    nextLevel(4); 
+                }
+                else { alert("be so serious absolutely not"); }
+            });
+        }
+    </script>
+</body>
+</html>
